@@ -1,0 +1,86 @@
+{
+  "name": "peertube-plugin-shig-live-stream",
+  "version": "0.0.0",
+  "description": "Multi guest live-streaming for PeerTube",
+  "engine": {
+    "peertube": ">=3.2.0"
+  },
+  "keywords": [
+    "peertube",
+    "plugin"
+  ],
+  "homepage": "https://github.com/shigde/peertube-plugin-shig-live-stream",
+  "author": "EnricoSchw",
+  "bugs": "https://framagit.org/framasoft/peertube/official-plugins/issues",
+  "library": "./main.js",
+  "staticDirs": {
+    "images": "public/images"
+  },
+  "css": [
+    "assets/style1.css",
+    "assets/style2.css"
+  ],
+  "clientScripts": [
+    {
+      "script": "client/common-client-plugin.js",
+      "scopes": [
+        "common"
+      ]
+    },
+    {
+      "script": "client/video-watch-client-plugin.js",
+      "scopes": [
+        "video-watch"
+      ]
+    },
+    {
+      "script": "client/search-client-plugin.js",
+      "scopes": [
+        "search"
+      ]
+    },
+    {
+      "script": "client/login-client-plugin.js",
+      "scopes": [
+        "login"
+      ]
+    },
+    {
+      "script": "client/signup-client-plugin.js",
+      "scopes": [
+        "signup"
+      ]
+    },
+    {
+      "script": "client/embed-client-plugin.js",
+      "scopes": [
+        "embed"
+      ]
+    },
+    {
+      "script": "client/video-edit-client-plugin.js",
+      "scopes": [
+        "video-edit"
+      ]
+    },
+    {
+      "script": "client/admin-plugin-client-plugin.js",
+      "scopes": [
+        "admin-plugin"
+      ]
+    },
+    {
+      "script": "client/video-channel-client-plugin.js",
+      "scopes": [
+        "video-channel"
+      ]
+    }
+  ],
+  "translations": {
+    "fr": "./languages/fr.json"
+  },
+  "dependencies": {
+    "ws": "^8.9.0"
+  }
+}
+
