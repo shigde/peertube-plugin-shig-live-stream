@@ -1,7 +1,7 @@
 {
   "name": "peertube-plugin-shig-live-stream",
   "version": "0.0.0",
-  "description": "Multi guest live-streaming for PeerTube",
+  "description": "Multi guest video live streaming for PeerTube",
   "author": {
     "name": "Enrico Schwendig",
     "url": "https://github.com/enricoschw"
