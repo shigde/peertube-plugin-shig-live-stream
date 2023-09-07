@@ -19,10 +19,13 @@
 		"isolatedModules": true, // Needed by esbuild https://esbuild.github.io/content-types/#isolated-modules
 		"esModuleInterop": true, // Needed by esbuild https://esbuild.github.io/content-types/#es-module-interop
     "outDir": "../dist/client",
-		"paths": {}
+		"paths": {
+			"shared/*": ["../shared/*"]
+		}
 	},
 	"include": [
-		"./**/*"
+		"./**/*",
+		"../shared/**/*"
 	],
 	"exclude": []
 }
