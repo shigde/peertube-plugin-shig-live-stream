@@ -78,6 +78,7 @@ function register(registerOptions: RegisterClientOptions): void {
                 const labelAskToJoin = labels[0]
                 const labelOpenShigLobby = labels[1]
 
+                console.log("video", video)
 
                 let buttonOptions: displayButtonOptions;
                 if (showOpenLobbyButton) {
@@ -85,7 +86,8 @@ function register(registerOptions: RegisterClientOptions): void {
                         buttonContainer: container,
                         name: 'open',
                         label: labelOpenShigLobby,
-                        callback: () => openLobby(video),
+                        //callback: () => openLobby(video),
+                        href: "/p/lobby?stream=" + video.shortUUID,
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
@@ -138,9 +140,7 @@ function register(registerOptions: RegisterClientOptions): void {
             }
 
             if (!videoHasShig(s, video) && !videoHasRemoteShig(s, video)) {
-                logger.log('This video has no --- Shig activated')
-                console.log(video);
-                console.log(s);
+                logger.log('This video has no Shig activated')
                 return
             }
 
@@ -160,12 +160,12 @@ function register(registerOptions: RegisterClientOptions): void {
         })
     }
 
-    function openLobby(video: Video): void | boolean {
-        if (!video) {
-            logger.log('No video.')
-            return false
-        }
-    }
+    // function openLobby(video: Video): void | boolean {
+    //     if (!video) {
+    //         logger.log('No video.')
+    //         return false
+    //     }
+    // }
 
     function openLobbyRequest(video: Video): void | boolean {
         if (!video) {

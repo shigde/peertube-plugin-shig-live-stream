@@ -1,12 +1,18 @@
 import type {RegisterClientOptions} from '@peertube/peertube-types/client'
 import type {RegisterClientFormFieldOptions} from '@peertube/peertube-types'
+import {showLobbyPage} from './pages/lobby';
 
 /*
 NB: if you need some types like `video`, `playlist`, ..., you can import them like that:
 import type { Video } from '@peertube/peertube-types'
 */
 
-async function register ({peertubeHelpers, registerHook, registerVideoField}: RegisterClientOptions): Promise<void> {
+async function register({
+                            peertubeHelpers,
+                            registerHook,
+                            registerVideoField,
+                            registerClientRoute
+                        }: RegisterClientOptions): Promise<void> {
 
     registerHook({
         target: 'action:router.navigation-end',
@@ -27,11 +33,19 @@ async function register ({peertubeHelpers, registerHook, registerVideoField}: Re
         }
     })
 
+    // Register the admin stats route
+    registerClientRoute({
+        route: 'lobby',
+        onMount: ({rootEl}) => {
+            showLobbyPage({rootEl, peertubeHelpers});
+        },
+    });
+
 
     const [label, description, settings] = await Promise.all([
-      peertubeHelpers.translate('Use Shig lobby'),
-      peertubeHelpers.translate("The Shig lobby is a Video Streaming Studio."),
-      peertubeHelpers.getSettings()
+        peertubeHelpers.translate('Use Shig lobby'),
+        peertubeHelpers.translate('The Shig lobby is a Video Streaming Studio.'),
+        peertubeHelpers.getSettings()
     ])
     // @TODO: Create Admin setup
     settings['shig-server-exists'] = true
