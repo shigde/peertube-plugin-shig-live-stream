@@ -58,16 +58,16 @@ async function register({
         type: 'input-checkbox',
         default: true,
         hidden: ({liveVideo}) => {
-            // if (!liveVideo) {
-            //     return true
-            // }
-            // if (!settings['shig-server-exists']) {
-            //     return true
-            // }
-            // if (settings['shig-all-lives']) {
-            //     // No need to add this field if live is active for all live videos
-            //     return true
-            // }
+            if (!liveVideo) {
+                return true
+            }
+            if (!settings['shig-server-exists']) {
+                return true
+            }
+            if (settings['shig-all-lives']) {
+                // No need to add this field if live is active for all live videos
+                return true
+            }
             return false
         }
     }

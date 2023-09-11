@@ -4,6 +4,7 @@ import {videoHasShig, videoHasRemoteShig} from 'shared/lib/video'
 import {logger} from './videowatch/logger'
 import {lobbySVG, askToJoinSVG} from './videowatch/button-svg'
 import {displayButton, displayButtonOptions} from './videowatch/button';
+import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
 
 interface VideoWatchLoadedHookOptions {
     videojs: any
@@ -63,8 +64,9 @@ function guessIamIModerator(_registerOptions: RegisterClientOptions): boolean {
     }
 }
 
-function register(registerOptions: RegisterClientOptions): void {
+async function register(registerOptions: RegisterClientOptions): Promise<void> {
     const {registerHook, peertubeHelpers} = registerOptions
+
     let settings: any = {}
 
     async function insertShigDom(container: HTMLElement, video: Video, showOpenLobbyButton: boolean): Promise<void> {
@@ -74,20 +76,28 @@ function register(registerOptions: RegisterClientOptions): void {
             Promise.all([
                 peertubeHelpers.translate('Ask to Join'),
                 peertubeHelpers.translate('Open Shig Lobby'),
+                peertubeHelpers.translate('Ask for live stream participation'),
+                peertubeHelpers.translate('Do you wont ask the owner to participate in the live stream?'),
+                peertubeHelpers.translate('Confirm'),
+                peertubeHelpers.translate('Cancel'),
             ]).then(labels => {
                 const labelAskToJoin = labels[0]
                 const labelOpenShigLobby = labels[1]
+                const modalTitle = labels[2]
+                const modalContent = labels[3]
+                const modalConfirm = labels[4]
+                const modalCancel = labels[5]
 
-                console.log("video", video)
+                console.log('video', video)
 
                 let buttonOptions: displayButtonOptions;
-                if (showOpenLobbyButton) {
+                if (!showOpenLobbyButton) {
                     buttonOptions = {
                         buttonContainer: container,
                         name: 'open',
                         label: labelOpenShigLobby,
                         //callback: () => openLobby(video),
-                        href: "/p/lobby?stream=" + video.shortUUID,
+                        href: '/p/lobby?stream=' + video.shortUUID,
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
@@ -96,7 +106,14 @@ function register(registerOptions: RegisterClientOptions): void {
                         buttonContainer: container,
                         name: 'join',
                         label: labelAskToJoin,
-                        callback: () => openLobbyRequest(video),
+                        callback: () => openLobbyRequest(
+                            video,
+                            peertubeHelpers,
+                            modalTitle,
+                            modalContent,
+                            modalConfirm,
+                            modalCancel
+                        ),
                         icon: askToJoinSVG,
                         additionalClasses: ['action-button']
                     }
@@ -167,11 +184,37 @@ function register(registerOptions: RegisterClientOptions): void {
     //     }
     // }
 
-    function openLobbyRequest(video: Video): void | boolean {
+    function openLobbyRequest(
+        video: Video,
+        peertubeHelpers: RegisterClientHelpers,
+        modalTitle: string,
+        modalContent: string,
+        modalConfirm: string,
+        modalCancel: string,
+    ): void | boolean {
         if (!video) {
             logger.log('No video.')
             return false
         }
+
+        peertubeHelpers.showModal({
+            title: modalTitle,
+            content: '<p>' + modalContent + '</p>',
+            // Optionals parameters :
+            // show close icon
+            close: true,
+            // show cancel button and call action() after hiding modal
+            cancel: {
+                value: modalCancel, action: () => {
+                }
+            },
+            // show confirm button and call action() after hiding modal
+            confirm: {
+                value: modalConfirm, action: () => {
+
+                }
+            },
+        })
     }
 
     registerHook({

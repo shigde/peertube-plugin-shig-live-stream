@@ -1,5 +1,10 @@
 {
-  "User name": "Nom d'utilisateur",
-  "Admin name": "Nom d'administrateur",
-  "two": "deux"
+  "Use Shig lobby": "Use Shig lobby",
+  "The Shig lobby is a Video Streaming Studio.": "The Shig lobby is a Video Streaming Studio.",
+  "Ask to Join": "Ask to Join",
+  "Open Shig Lobby": "Open Shig Lobby",
+  "Ask for live stream participation": "Ask for live stream participation",
+  "Do you wont ask the owner to participate in the live stream?": "Do you wont ask the owner to participate in the live stream?",
+  "Confirm" : "Confirm",
+  "Cancel": "Cancel"
 }
