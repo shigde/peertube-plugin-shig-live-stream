@@ -1,10 +1,21 @@
 {
-  "Use Shig lobby": "Use Shig lobby",
-  "The Shig lobby is a Video Streaming Studio.": "The Shig lobby is a Video Streaming Studio.",
+  "Shig Settings": "Shig Settings",
+  "Use Shig Lobby": "Use Shig Lobby",
+  "The Shig Lobby is a browser based streaming studio, which you can use directly from PeerTube. You don't need any other streaming software to record your live video.": "The Shig Lobby is a browser based streaming studio, which you can use directly from PeerTube. You don't need any other streaming software to record your live video.",
+  "Multi Guest Streaming": "Multi Guest Streaming",
+  "Invite Guests to your live streams.": "Invite Guests to your live streams.",
+  "Guests have access and can enter the streaming lobby. With guest's you can record a live video together.": "Guests have access and can enter the streaming lobby. With guest's you can record a live video together.",
+  "If the user exists in PeerTube, We send all quest's an invitation to your live video.'": "If the user exists in PeerTube, We send all quest's an invitation to your live video.'",
+  "First Guest": "First Guest",
+  "Second Guest": "Second Guest",
+  "Third Guest": "Third Guest",
+  "Enter an existing PeerTube user name.": "Enter an existing PeerTube user name.",
   "Ask to Join": "Ask to Join",
   "Open Shig Lobby": "Open Shig Lobby",
   "Ask for live stream participation": "Ask for live stream participation",
   "Do you wont ask the owner to participate in the live stream?": "Do you wont ask the owner to participate in the live stream?",
-  "Confirm" : "Confirm",
-  "Cancel": "Cancel"
+  "Confirm": "Confirm",
+  "Cancel": "Cancel",
+  "Custom notification message": "Custom notification message",
+  "You can add a custom message we will send to your guest in the invitation message.": "You can add a custom message we will send to your guest in the invitation message."
 }
