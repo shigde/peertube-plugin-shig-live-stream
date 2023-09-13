@@ -9,7 +9,6 @@ import type { Video } from '@peertube/peertube-types'
 
 async function register({
                             peertubeHelpers,
-                            registerHook,
                             registerVideoField,
                             registerClientRoute
                         }: RegisterClientOptions): Promise<void> {
@@ -27,26 +26,6 @@ async function register({
         }
         return false
     }
-
-
-    registerHook({
-        target: 'action:router.navigation-end',
-        handler: () => {
-            const container = document.querySelector('#peertube-plugin-shig-live-stream-container')
-            if (container) {
-                const url = container.getAttribute('peertube-plugin-shig-live-stream-current-url')
-                if (url && url === window.location.href) {
-                    console.warn(
-                        '[peertube-plugin-livechat navigation-end] ' +
-                        'It seems that action:router.navigation-end was called after action:video-watch.video.loaded. ' +
-                        'No removing the chat from the DOM.'
-                    )
-                    return
-                }
-                container.remove()
-            }
-        }
-    })
 
     // Register the admin stats route
     registerClientRoute({
@@ -99,7 +78,7 @@ async function register({
     }
 
     const shigFieldOptions: RegisterClientFormFieldOptions = {
-        name: 'shig-active',
+        name: 'shigActive',
         label: labelActivate,
         descriptionHTML: descriptionActivate,
         type: 'input-checkbox',
@@ -114,6 +93,7 @@ async function register({
     }
 
     const shigFirstGuestOption: RegisterClientFormFieldOptions = {
+        name: 'firstGuest',
         type: 'input',
         label: firstGuest,
         descriptionHTML: imputDescriptionGuest,
@@ -122,6 +102,7 @@ async function register({
     }
 
     const shigSecondGuestOption: RegisterClientFormFieldOptions = {
+        name: 'secondGuest',
         type: 'input',
         label: secondGuest,
         descriptionHTML: imputDescriptionGuest,
@@ -130,6 +111,7 @@ async function register({
     }
 
     const shigThirdGuestOption: RegisterClientFormFieldOptions = {
+        name: 'thirdGuest',
         type: 'input',
         label: thirdGuest,
         descriptionHTML: imputDescriptionGuest,

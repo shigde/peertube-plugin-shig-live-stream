@@ -91,7 +91,7 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 console.log('video', video)
 
                 let buttonOptions: displayButtonOptions;
-                if (!showOpenLobbyButton) {
+                if (showOpenLobbyButton) {
                     buttonOptions = {
                         buttonContainer: container,
                         name: 'open',
@@ -125,7 +125,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
         return p
     }
 
-
     function initShig(video: Video): void {
         if (!video) {
             logger.info('No video provided')
@@ -139,6 +138,8 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
         }
 
         let container = placeholder;
+
+        console.log('video', video)
 
         peertubeHelpers.getSettings().then((s: any) => {
             settings = s
