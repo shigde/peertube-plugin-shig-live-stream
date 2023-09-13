@@ -7,19 +7,24 @@ interface ShigVideoObject extends VideoObject {
 }
 
 interface ShigCustomFieldsVideo {
-    id?: number | string
-    uuid?: string
+    id: number | string
+    uuid: string
+    url: string
     isLive: boolean
     pluginData?: ShigPluginData
 }
 
 interface ShigPluginData {
+    url: string
+
     shigActive?: boolean
     shigRemote?: boolean
 
     firstGuest?: string
     secondGuest?: string
     thirdGuest?: string
+
+    customMessage? : string
 }
 
 export {

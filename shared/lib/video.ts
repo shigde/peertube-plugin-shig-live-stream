@@ -10,7 +10,7 @@ interface SharedVideoBase {
   uuid: string
   isLive: boolean
   pluginData?: {
-    'shig-active'?: boolean
+    'shigActive'?: boolean
     'shig-remote'?: boolean
   }
 }
@@ -39,7 +39,7 @@ function videoHasShig (settings: VideoHasShigSettings, video: SharedVideo): bool
     if (video.remote) return false
   }
 
-  if (settings['shig-per-live-video'] && video.isLive && video.pluginData && video.pluginData['shig-active']) {
+  if (settings['shig-per-live-video'] && video.isLive && video.pluginData && video.pluginData['shigActive']) {
     return true
   }
 

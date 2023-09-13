@@ -3,6 +3,7 @@ import {initCustomFields} from './custom-fields';
 import decache from 'decache'
 import {FileStorageManager} from './storage/file-storage-manager';
 import {VideoHandler} from './handler/video-handler';
+import path from 'path';
 
 // FIXME: Peertube unregister don't have any parameter.
 // Using this global variable to fix this, so we can use helpers to unregister.
@@ -15,7 +16,8 @@ async function register(options: RegisterServerOptions): Promise<void> {
         throw new Error('Your peertube version is not correct. This plugin is not compatible with Peertube < 3.2.0.')
     }
 
-    const fileHandler = new FileStorageManager();
+    const serverInfosDir = path.resolve(options.peertubeHelpers.plugin.getDataDirectoryPath(), 'serverInfos')
+    const fileHandler = new FileStorageManager(serverInfosDir, options.peertubeHelpers.logger);
     const videoHandler = new VideoHandler(options.storageManager, fileHandler, options.peertubeHelpers.logger)
 
     await initCustomFields(options, videoHandler)

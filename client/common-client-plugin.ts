@@ -121,6 +121,7 @@ async function register({
 
     const shigCustomMessage: RegisterClientFormFieldOptions = {
         type: 'input-textarea',
+        name: 'customMessage',
         label: messageLabel,
         descriptionHTML: messageDescription,
         default: '',
