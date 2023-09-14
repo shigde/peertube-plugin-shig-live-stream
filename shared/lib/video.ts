@@ -1,4 +1,3 @@
-import {parseConfigUUIDs} from './config'
 import {VideoObject} from '@peertube/peertube-types';
 import {ActivityPubAttributedTo} from '@peertube/peertube-types/shared/models/activitypub/objects/common-objects';
 
@@ -7,9 +6,9 @@ interface ShigVideoObject extends VideoObject {
 }
 
 interface VideoHasShigSettings {
-    'shig-per-live-video': boolean
-    'shig-all-lives': boolean
-    'shig-videos-list': string
+    'shig-plugin-active': boolean
+    'shig-server-url': boolean
+    'shig-access-token': string
 }
 
 interface ShigPluginData {
@@ -57,17 +56,7 @@ function videoHasShig(settings: VideoHasShigSettings, video: SharedVideo): boole
         if (video.remote) return false
     }
 
-    if (settings['shig-per-live-video'] && video.isLive && video.pluginData && video.pluginData['shigActive']) {
-        return true
-    }
-
-    if (settings['shig-all-lives']) {
-        if (video.isLive) return true
-    }
-
-    const uuids = parseConfigUUIDs(settings['shig-videos-list'])
-
-    if (uuids.includes(video.uuid)) {
+    if (settings['shig-plugin-active'] && video.isLive && video.pluginData && video.pluginData['shigActive']) {
         return true
     }
 
@@ -75,7 +64,7 @@ function videoHasShig(settings: VideoHasShigSettings, video: SharedVideo): boole
 }
 
 interface VideoHasRemoteShigSettings {
-    'federation-no-remote-chat': boolean
+    'shig-federation-no-remote': boolean
 }
 
 /**
@@ -85,7 +74,7 @@ interface VideoHasRemoteShigSettings {
  * @returns true if the video has a remote chat
  */
 function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedVideo): boolean {
-    if (settings['federation-no-remote-chat']) {
+    if (settings['shig-federation-no-remote']) {
         return false
     }
     if ('isLocal' in video) {
