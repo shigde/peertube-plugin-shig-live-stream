@@ -17,11 +17,8 @@ async function register({
         if (!option && !option?.liveVideo) {
             return true
         }
-        if (!settings['shig-server-exists']) {
-            return true
-        }
-        if (settings['shig-all-lives']) {
-            // No need to add this field if live is active for all live videos
+
+        if (!settings['shig-plugin-active']) {
             return true
         }
         return false
@@ -66,10 +63,6 @@ async function register({
         peertubeHelpers.translate('You can add a custom message we will send to your guest in the invitation message.'),
         peertubeHelpers.getSettings()
     ])
-    // @TODO: Create Admin setup
-    settings['shig-server-exists'] = true
-    settings['shig-all-lives'] = false
-
 
     const shigHeadline: RegisterClientFormFieldOptions = {
         type: 'html',

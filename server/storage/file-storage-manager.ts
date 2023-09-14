@@ -1,10 +1,11 @@
-import {ShigPluginData} from '../types';
+
 import {Logger} from 'winston';
 import {MVideoAP, MVideoFullLight, MVideoThumbnail, Video} from '@peertube/peertube-types';
 import {URL} from 'url';
 import path from 'path';
 import fs from 'fs';
 import {sanitizePeertubeShigPluginData} from '../federation/sanitize';
+import {ShigPluginData} from 'shared/lib/video';
 
 const cache: Map<string, ShigPluginData | undefined> = new Map<string, ShigPluginData | undefined>()
 

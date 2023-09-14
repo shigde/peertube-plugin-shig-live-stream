@@ -143,12 +143,21 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
 
         peertubeHelpers.getSettings().then((s: any) => {
             settings = s
-            settings['shig-server-exists'] = true
-            settings['shig-per-live-video'] = true
+            settings['shig-plugin-active'] = true
 
             logger.log('Checking if this video should have a Shig setup...')
-            if (settings['shig-server-exists'] !== true) {
+            if (settings['shig-plugin-active'] !== true) {
                 logger.log('No Shig supported')
+                return
+            }
+
+            if (!settings['shig-server-url']) {
+                logger.log('No Shig Server')
+                return
+            }
+
+            if (!settings['shig-access-token']) {
+                logger.log('No Shig Access Token')
                 return
             }
 

@@ -15,7 +15,9 @@
 		"sourceMap": true,
 
 		"outDir": "../dist/server/",
-		"paths": {}
+	  	"paths": {
+			"shared/*": ["../shared/*"]
+		}
 	},
 	"include": [
 		"./**/*"

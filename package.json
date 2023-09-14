@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-shig-live-stream",
-  "version": "0.0.46",
+  "version": "0.0.50",
   "description": "Multi guest video live streaming for PeerTube",
   "author": {
     "name": "Enrico Schwendig",
@@ -19,6 +19,12 @@
       "scopes": [
         "video-watch"
       ]
+    },
+    {
+      "script": "dist/client/admin-plugin-client-plugin.js",
+      "scopes": [
+        "admin-plugin"
+      ]
     }
   ],
   "css": [
@@ -32,7 +38,7 @@
     "peertube",
     "plugin"
   ],
-  "library": "./dist/server/main.js",
+  "library": "./dist/server/server/main.js",
   "scripts": {
     "clean": "rm -rf dist/*",
     "prepare": "npm run build",
