@@ -5,7 +5,8 @@ import {URL} from 'url';
 import path from 'path';
 import fs from 'fs';
 import {sanitizePeertubeShigPluginData} from '../federation/sanitize';
-import {ShigPluginData} from 'shared/lib/video';
+import {ShigPluginData} from '../../shared/lib/video';
+
 
 const cache: Map<string, ShigPluginData | undefined> = new Map<string, ShigPluginData | undefined>()
 

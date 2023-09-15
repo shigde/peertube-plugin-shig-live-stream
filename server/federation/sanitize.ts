@@ -1,4 +1,4 @@
-import {ShigPluginData} from 'shared/lib/video';
+import {ShigPluginData} from '../../shared/lib/video';
 
 function sanitizePeertubeShigPluginData(content: any, referenceUrl: string): ShigPluginData {
     const shigDeactivated: ShigPluginData = {
