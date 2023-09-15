@@ -2,13 +2,15 @@ import {VideoObject} from '@peertube/peertube-types';
 import {ActivityPubAttributedTo} from '@peertube/peertube-types/shared/models/activitypub/objects/common-objects';
 
 interface ShigVideoObject extends VideoObject {
+    peertubeShig: boolean | ShigPluginData
     guests: ActivityPubAttributedTo[]
 }
 
 interface VideoHasShigSettings {
     'shig-plugin-active': boolean
-    'shig-server-url': boolean
-    'shig-access-token': string
+    'shig-server-url': string
+    'shig-access-token': string,
+    'shig-federation-no-remote': boolean
 }
 
 interface ShigPluginData {
@@ -69,9 +71,6 @@ interface VideoHasRemoteShigSettings {
 
 /**
  * Indicates if the video has a remote chat.
- * @param settings plugin settings
- * @param video the video
- * @returns true if the video has a remote chat
  */
 function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedVideo): boolean {
     if (settings['shig-federation-no-remote']) {
@@ -91,13 +90,25 @@ function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedV
     return true
 }
 
+function castSettingsToShigSettings(settings: any): VideoHasShigSettings {
+    return {
+        'shig-plugin-active': !!settings['shig-plugin-active'],
+        'shig-server-url': ('shig-server-url' in settings) ? settings['shig-server-url'] : '',
+        'shig-access-token': ('shig-access-token' in settings) ? settings['shig-access-token'] : '',
+        'shig-federation-no-remote': !!settings['shig-federation-no-remote']
+    }
+}
+
 export type {
     ShigVideo,
     ShigPluginData,
     ShigVideoObject,
+    SharedVideo,
+    VideoHasShigSettings,
 }
 
 export {
     videoHasShig,
-    videoHasRemoteShig
+    videoHasRemoteShig,
+    castSettingsToShigSettings
 }

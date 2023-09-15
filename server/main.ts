@@ -5,6 +5,7 @@ import {FileStorageManager} from './storage/file-storage-manager';
 import {VideoHandler} from './handler/video-handler';
 import path from 'path';
 import {initSettings} from './settings';
+import {initFederation} from './federation/init';
 
 // FIXME: Peertube unregister don't have any parameter.
 // Using this global variable to fix this, so we can use helpers to unregister.
@@ -23,6 +24,7 @@ async function register(options: RegisterServerOptions): Promise<void> {
 
     await initCustomFields(options, videoHandler)
     await initSettings(options)
+    await initFederation(options, videoHandler)
 }
 
 async function unregister(): Promise<void> {

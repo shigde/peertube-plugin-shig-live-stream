@@ -3,8 +3,6 @@ import {Logger} from 'winston';
 import {FileStorageManager} from '../storage/file-storage-manager';
 import {ShigPluginData} from '../../shared/lib/video';
 
-
-
 export class VideoHandler {
     constructor(
         private pluginStorageManager: PluginStorageManager,
@@ -50,11 +48,13 @@ export class VideoHandler {
         }
     }
 
-    public async fillVideoShigFields(video: Video): Promise<any> {
+    public async fillVideoShigFields(video: any): Promise<any> {
         if (!video) return video
 
         if (!video.id || !video.uuid || !video.url) return
-        if (!video.pluginData) video.pluginData = {url: video.url}
+        if (!('pluginData' in video)) {
+            video['pluginData'] = {url: video.url} as ShigPluginData
+        }
 
         if (video.isLive) {
             const result: any = await this.pluginStorageManager.getData(`shigActive-${video.id.toString()}`)
@@ -68,5 +68,9 @@ export class VideoHandler {
                 video.pluginData['shigActive'] = false
             }
         }
+    }
+
+    public getFileSoraage(): FileStorageManager {
+        return this.fileStorageManager
     }
 }
