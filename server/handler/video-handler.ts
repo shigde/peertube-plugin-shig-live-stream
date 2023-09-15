@@ -1,7 +1,8 @@
 import {PluginStorageManager, Video} from '@peertube/peertube-types';
 import {Logger} from 'winston';
 import {FileStorageManager} from '../storage/file-storage-manager';
-import {ShigPluginData} from 'shared/lib/video';
+import {ShigPluginData} from '../../shared/lib/video';
+
 
 
 export class VideoHandler {

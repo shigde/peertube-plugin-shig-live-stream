@@ -1,4 +1,6 @@
 import type {RegisterServerOptions} from '@peertube/peertube-types'
+import {validateServerUrl, validateToken} from '../shared/lib/validator';
+
 
 async function initSettings(options: RegisterServerOptions): Promise<void> {
     const {registerSetting} = options
@@ -33,7 +35,8 @@ async function initSettings(options: RegisterServerOptions): Promise<void> {
         descriptionHTML: 'Insert a URL through which the Shig service can be accessed, like: http://localhost:8081',
         type: 'input',
         default: '',
-        private: false
+        private: false,
+        error: validateServerUrl
     })
 
     registerSetting({
@@ -42,7 +45,8 @@ async function initSettings(options: RegisterServerOptions): Promise<void> {
         descriptionHTML: 'Insert a service access token.',
         type: 'input',
         default: '',
-        private: false
+        private: false,
+        error: validateToken
     })
 
     registerSetting({

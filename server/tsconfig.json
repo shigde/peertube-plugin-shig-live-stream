@@ -14,13 +14,14 @@
 		"removeComments": true,
 		"sourceMap": true,
 
-		"outDir": "../dist/server/",
+		"baseUrl": "./",
+		"outDir": "../dist/",
 	  	"paths": {
-			"shared/*": ["../shared/*"]
 		}
 	},
 	"include": [
-		"./**/*"
+		"./**/*",
+		"../shared/**/*"
 	],
 	"exclude": []
 }

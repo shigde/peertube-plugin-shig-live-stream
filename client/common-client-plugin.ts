@@ -1,6 +1,7 @@
 import type {RegisterClientOptions} from '@peertube/peertube-types/client'
 import type {RegisterClientFormFieldOptions} from '@peertube/peertube-types'
 import {showLobbyPage} from './pages/lobby';
+import {validateTextField, validateUser} from 'shared/lib/validator';
 
 /*
 NB: if you need some types like `video`, `playlist`, ..., you can import them like that:
@@ -28,7 +29,10 @@ async function register({
     registerClientRoute({
         route: 'lobby',
         onMount: ({rootEl}) => {
-            showLobbyPage({rootEl, peertubeHelpers});
+            showLobbyPage({
+                rootEl,
+                peertubeHelpers
+            });
         },
     });
 
@@ -43,7 +47,7 @@ async function register({
         firstGuest,
         secondGuest,
         thirdGuest,
-        imputDescriptionGuest,
+        inputDescriptionGuest,
         messageLabel,
         messageDescription,
         settings
@@ -89,27 +93,30 @@ async function register({
         name: 'firstGuest',
         type: 'input',
         label: firstGuest,
-        descriptionHTML: imputDescriptionGuest,
+        descriptionHTML: inputDescriptionGuest,
         default: '',
-        hidden: hideSettings
+        hidden: hideSettings,
+        error: validateUser
     }
 
     const shigSecondGuestOption: RegisterClientFormFieldOptions = {
         name: 'secondGuest',
         type: 'input',
         label: secondGuest,
-        descriptionHTML: imputDescriptionGuest,
+        descriptionHTML: inputDescriptionGuest,
         default: '',
-        hidden: hideSettings
+        hidden: hideSettings,
+        error: validateUser
     }
 
     const shigThirdGuestOption: RegisterClientFormFieldOptions = {
         name: 'thirdGuest',
         type: 'input',
         label: thirdGuest,
-        descriptionHTML: imputDescriptionGuest,
+        descriptionHTML: inputDescriptionGuest,
         default: '',
-        hidden: hideSettings
+        hidden: hideSettings,
+        error: validateUser
     }
 
     const shigCustomMessage: RegisterClientFormFieldOptions = {
@@ -118,7 +125,8 @@ async function register({
         label: messageLabel,
         descriptionHTML: messageDescription,
         default: '',
-        hidden: hideSettings
+        hidden: hideSettings,
+        error: validateTextField
     }
 
     registerVideoField(shigHeadline, {type: 'update'})
