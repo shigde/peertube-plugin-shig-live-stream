@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-shig-live-stream",
-  "version": "0.0.70",
+  "version": "0.0.115",
   "description": "Multi guest video live streaming for PeerTube",
   "author": {
     "name": "Enrico Schwendig",
@@ -64,11 +64,13 @@
   "devDependencies": {
     "@peertube/peertube-types": "^5.2.0",
     "@tsconfig/node18": "^18.2.1",
+    "@types/express-http-proxy": "^1.6.3",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "esbuild": "^0.19.2",
     "eslint": "^8.48.0",
     "eslint-config-standard-with-typescript": "^39.0.0",
+    "express-http-proxy": "^2.0.0",
     "npm-run-all": "^4.1.5",
     "sass": "^1.66.1",
     "sequelize": "6.32.1",
