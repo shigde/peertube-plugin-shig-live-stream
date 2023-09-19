@@ -1,6 +1,6 @@
 import type {RegisterServerOptions, VideoObject} from '@peertube/peertube-types'
 import {
-    castSettingsToShigSettings, SharedVideo, ShigPluginData,
+    getShigSettings, SharedVideo, ShigPluginData,
     ShigVideoObject,
     videoHasShig,
 } from '../../shared/lib/video';
@@ -18,13 +18,7 @@ async function videoBuildJSONLD(options: RegisterServerOptions, videoHandler: Vi
         return videoObject
     } // should not happen, but... just in case...
 
-    const settingEntries = await options.settingsManager.getSettings([
-        'shig-plugin-active',
-        'shig-server-url',
-        'shig-access-token',
-        'shig-federation-no-remote',
-    ])
-    const settings = castSettingsToShigSettings(settingEntries)
+    const settings = await getShigSettings(options.settingsManager)
 
     if (settings['shig-federation-no-remote']) {
         Object.assign(videoObject, {
