@@ -5,12 +5,17 @@ const bearer = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3
 
 async function initProxy(options: RegisterServerOptions): Promise<void> {
     const router = options.getRouter()
+    // const logger = options.peertubeHelpers.logger
 
-    router.all('/space*',  proxy('http://localhost:8080', {
-        proxyReqOptDecorator:  (proxyReqOpts, srcReq) => {
-            proxyReqOpts.headers = {"Authorization": bearer};
+    router.all('/space*', proxy('http://localhost:8080', {
+        proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
+            proxyReqOpts.headers = {
+                ...proxyReqOpts.headers,
+                'authorization': bearer
+            };
             return proxyReqOpts;
-        }
+        },
+        parseReqBody: false,
     }));
 }
 
