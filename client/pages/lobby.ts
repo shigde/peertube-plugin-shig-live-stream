@@ -29,6 +29,7 @@ async function showLobbyPage({
 
         const auth = peertubeHelpers.getAuthHeader();
         lobby.setAttribute('token', auth !== undefined ? auth.Authorization : 'unauthorized');
+        lobby.setAttribute('api-prefix', '/plugins/shig-live-stream/router');
 
         const wrapper = document.getElementById('wrapper');
         wrapper?.appendChild(lobby);

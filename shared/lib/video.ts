@@ -1,5 +1,6 @@
 import {VideoObject} from '@peertube/peertube-types';
 import {ActivityPubAttributedTo} from '@peertube/peertube-types/shared/models/activitypub/objects/common-objects';
+import {PluginSettingsManager} from '@peertube/peertube-types/shared/models';
 
 interface ShigVideoObject extends VideoObject {
     peertubeShig: boolean | ShigPluginData
@@ -90,6 +91,16 @@ function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedV
     return true
 }
 
+async function getShigSettings(settingsManager: PluginSettingsManager): Promise<VideoHasShigSettings> {
+    const settingEntries = await settingsManager.getSettings([
+        'shig-plugin-active',
+        'shig-server-url',
+        'shig-access-token',
+        'shig-federation-no-remote',
+    ])
+    return castSettingsToShigSettings(settingEntries)
+}
+
 function castSettingsToShigSettings(settings: any): VideoHasShigSettings {
     return {
         'shig-plugin-active': !!settings['shig-plugin-active'],
@@ -110,5 +121,6 @@ export type {
 export {
     videoHasShig,
     videoHasRemoteShig,
-    castSettingsToShigSettings
+    castSettingsToShigSettings,
+    getShigSettings
 }
