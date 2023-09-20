@@ -1,6 +1,6 @@
 import type {RegisterServerOptions, Video} from '@peertube/peertube-types'
 import {VideoHandler} from './handler/video-handler';
-
+import {createNotification} from './notifier/guest-invitation-notification';
 
 async function initCustomFields(options: RegisterServerOptions, videoHandler: VideoHandler): Promise<void> {
     const registerHook = options.registerHook
@@ -8,8 +8,19 @@ async function initCustomFields(options: RegisterServerOptions, videoHandler: Vi
 
     registerHook({
         target: 'action:api.video.updated',
-        handler: async (parms: any): Promise<void> => {
-            await videoHandler.saveShigData(parms)
+        handler: async (params: any): Promise<void> => {
+            await videoHandler.saveShigData(params)
+
+            const video: Video | undefined = params.video
+            if (!video || !video.id || !video.url) {
+                return
+            }
+            logger.info('############## aaaaaaa??')
+            const notification = createNotification(4, video)
+
+            options.peertubeHelpers.socket.sendNotification(1, notification)
+
+            logger.info('############## Halllo??')
         }
     })
 
@@ -25,7 +36,6 @@ async function initCustomFields(options: RegisterServerOptions, videoHandler: Vi
         }
     })
 }
-
 
 // async function fillVideoCustomFields(options: RegisterServerOptions, video: ShigCustomFieldsVideo): Promise<void> {
 //     if (!video) return video

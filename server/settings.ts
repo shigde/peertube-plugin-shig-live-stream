@@ -1,9 +1,12 @@
-import type {RegisterServerOptions} from '@peertube/peertube-types'
+import type {PeerTubeHelpers, RegisterServerOptions} from '@peertube/peertube-types'
 import {validateServerUrl, validateToken} from '../shared/lib/validator';
 
-
 async function initSettings(options: RegisterServerOptions): Promise<void> {
-    const {registerSetting} = options
+    const {
+        registerSetting,
+        settingsManager,
+        peertubeHelpers
+    } = options
 
     registerSetting({
         type: 'html',
@@ -58,6 +61,14 @@ async function initSettings(options: RegisterServerOptions): Promise<void> {
         private: false
     })
 
+    settingsManager.onSettingsChange(async settings => {
+        await updateSettings(peertubeHelpers, settings)
+    })
+
+}
+
+async function updateSettings(peertubeHelpers: PeerTubeHelpers, settings: any) {
+    peertubeHelpers.logger.info('settings changed')
 }
 
 export {
