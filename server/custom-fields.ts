@@ -1,6 +1,7 @@
 import type {RegisterServerOptions, Video} from '@peertube/peertube-types'
 import {VideoHandler} from './handler/video-handler';
-import {createNotification} from './notifier/guest-invitation-notification';
+import {createNotification} from './notification/guest-invitation-notification';
+
 
 async function initCustomFields(options: RegisterServerOptions, videoHandler: VideoHandler): Promise<void> {
     const registerHook = options.registerHook
@@ -18,7 +19,7 @@ async function initCustomFields(options: RegisterServerOptions, videoHandler: Vi
             logger.info('############## aaaaaaa??')
             const notification = createNotification(4, video)
 
-            options.peertubeHelpers.socket.sendNotification(1, notification)
+            options.peertubeHelpers.socket.sendNotification(4, notification)
 
             logger.info('############## Halllo??')
         }

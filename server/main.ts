@@ -7,6 +7,8 @@ import path from 'path';
 import {initSettings} from './settings';
 import {initFederation} from './federation/init';
 import {initProxy} from './proxy/init';
+import {SQLiteStorageManager} from './storage/sqlite-storage-manager';
+
 
 // FIXME: Peertube unregister don't have any parameter.
 // Using this global variable to fix this, so we can use helpers to unregister.
@@ -22,10 +24,15 @@ async function register(options: RegisterServerOptions): Promise<void> {
     const serverInfosDir = path.resolve(options.peertubeHelpers.plugin.getDataDirectoryPath(), 'serverInfos')
     const fileHandler = new FileStorageManager(serverInfosDir, options.peertubeHelpers.logger);
     const videoHandler = new VideoHandler(options.storageManager, fileHandler, options.peertubeHelpers.logger)
+    // const notifier = new Notifier()
+
+    const sqliteStorageManager = new SQLiteStorageManager(serverInfosDir, options.peertubeHelpers.logger)
+    await sqliteStorageManager.migrate()
 
     await initCustomFields(options, videoHandler)
     await initSettings(options)
     await initFederation(options, videoHandler)
+    // await initNotifier(options, notifier)
     await initProxy(options)
 
 }

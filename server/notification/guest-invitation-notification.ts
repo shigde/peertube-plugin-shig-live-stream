@@ -17,10 +17,10 @@ function createNotification(user: number, video: any): UserNotificationModelForA
                     shortUUID: video.shortUUID,
                     name: video.name,
                     channel: {
-                        id: video.channel.id,
-                        displayName: video.channel.displayName,
-                        name: video.channel.name,
-                        host: video.channel.host,
+                        // id: video.channel.id,
+                        // displayName: video.channel.displayName,
+                        // name: video.channel.name,
+                        // host: video.channel.host,
                         // avatars: AvatarInfo[];
                         // avatar: AvatarInfo;
                     }
