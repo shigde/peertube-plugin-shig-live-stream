@@ -9,8 +9,7 @@ import {initFederation} from './federation/init';
 import {initProxy} from './proxy/init';
 import {SQLiteStorageManager} from './storage/sqlite-storage-manager';
 import {WebSocketServer} from 'ws';
-// import {getUserIdByOAuthToken} from './storage/oauth-token';
-// import moment from 'moment';
+import {getUserIdByOAuthToken} from './storage/oauth-token';
 
 // FIXME: Peertube unregister don't have any parameter.
 // Using this global variable to fix this, so we can use helpers to unregister.
@@ -34,9 +33,9 @@ async function register(options: RegisterServerOptions): Promise<void> {
     const logger = options.peertubeHelpers.logger
     wss.on('connection', async (ws, request) => {
         ws.on('message', async (token) => {
-            // const userId = await getUserIdByOAuthToken(options.peertubeHelpers.database, `${token}`)
-            logger.debug(`#################### - connected: ${token}`)
-            ws.send(`connected`)
+            const userId = await getUserIdByOAuthToken(options.peertubeHelpers, `${token}`)
+            logger.debug(`#################### - connected: ${userId}`)
+            ws.send(`connected: ${userId}`)
             // if(userId == -1) {
             //     ws.close(401, 'authentication failed"')
             //     return
