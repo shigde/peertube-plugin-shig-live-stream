@@ -10,6 +10,7 @@ import type { Video } from '@peertube/peertube-types'
 
 async function register({
                             peertubeHelpers,
+                            registerHook,
                             registerVideoField,
                             registerClientRoute
                         }: RegisterClientOptions): Promise<void> {
@@ -144,6 +145,24 @@ async function register({
     registerVideoField(shigSecondGuestOption, {type: 'go-live'})
     registerVideoField(shigThirdGuestOption, {type: 'go-live'})
     registerVideoField(shigCustomMessage, {type: 'go-live'})
+
+    registerHook({
+        target: 'action:auth-user.information-loaded',
+        handler: ({user}: any) => {
+            const token = user.access_token
+            const baseScheme = window.location.protocol === 'https:'
+                ? 'wss:'
+                : 'ws:'
+            const url = `${baseScheme}//${window.location.host}/plugins/shig-live-stream/ws/notification`
+            const socket = new WebSocket(url);
+            socket.onopen = () => socket.send(token);
+
+
+            socket.addEventListener('message', (event) => {
+                console.log(event.data, token)
+            })
+        },
+    });
 }
 
 export {

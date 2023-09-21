@@ -47,4 +47,8 @@ export class SQLiteStorageManager {
             })
         })
     }
+
+    async saveNotification(notification: any) {
+        return Promise.resolve()
+    }
 }
