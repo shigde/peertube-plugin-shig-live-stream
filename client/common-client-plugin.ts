@@ -2,7 +2,7 @@ import type {RegisterClientOptions} from '@peertube/peertube-types/client'
 import type {RegisterClientFormFieldOptions} from '@peertube/peertube-types'
 import {showLobbyPage} from './pages/lobby';
 import {validateTextField, validateUser} from 'shared/lib/validator';
-
+import {invitationSubmenu, showInvitationPage} from './pages/invitations';
 /*
 NB: if you need some types like `video`, `playlist`, ..., you can import them like that:
 import type { Video } from '@peertube/peertube-types'
@@ -15,17 +15,6 @@ async function register({
                             registerClientRoute
                         }: RegisterClientOptions): Promise<void> {
 
-    function hideSettings(option: any): boolean {
-        if (!option && !option?.liveVideo) {
-            return true
-        }
-
-        if (!settings['shig-plugin-active']) {
-            return true
-        }
-        return false
-    }
-
     // Register the admin stats route
     registerClientRoute({
         route: 'lobby',
@@ -36,6 +25,77 @@ async function register({
             });
         },
     });
+
+    registerHook({
+        target: 'filter:left-menu.links.create.result',
+        handler: async (leftMenu: any[]) => {
+            leftMenu.forEach((menu) => {
+                if (menu.key == 'in-my-library') {
+                    if (invitationSubmenu.menuObj.length == 0) {
+                        invitationSubmenu.menuObj = menu.links
+                    }
+                    menu.links.push({
+                        path: '/p/invitations',
+                        icon: 'users',
+                        shortLabel: 'Invites',
+                        label: 'My Invites'
+                    })
+                }
+            })
+            return leftMenu
+        }
+    });
+
+    /**
+     * Add link admin page
+     */
+    registerHook({
+        target: 'action:router.navigation-end',
+        handler: async (params: any) => {
+            if (params.path.startsWith('/my-library/')) {
+                if (document.getElementById('invitation-link')) return;
+
+                let href = '/p/invitations';
+
+                // Get menu container
+                const menuContainer = document.getElementsByClassName('sub-menu')[0];
+
+                // Create link
+                const content = `
+          <a _ngcontent-dke-c79="" id="invitation-link" routerlinkactive="active" class="sub-menu-entry ng-star-inserted" href="${href}">
+            ${await peertubeHelpers.translate('Invitations')}
+          </a>
+        `;
+
+                // Create node for it
+                const nodeLink = document.createElement('div');
+                nodeLink.innerHTML = content.trim();
+                // Insert to menu container
+                menuContainer.appendChild(nodeLink);
+            }
+        },
+    });
+
+    registerClientRoute({
+        route: 'invitations',
+        onMount: ({rootEl}) => {
+            showInvitationPage({
+                rootEl,
+                peertubeHelpers
+            });
+        },
+    });
+
+    function hideSettings(option: any): boolean {
+        if (!option && !option?.liveVideo) {
+            return true
+        }
+
+        if (!settings['shig-plugin-active']) {
+            return true
+        }
+        return false
+    }
 
     const [
         headlineShig,
@@ -156,7 +216,6 @@ async function register({
             const url = `${baseScheme}//${window.location.host}/plugins/shig-live-stream/ws/notification`
             const socket = new WebSocket(url);
             socket.onopen = () => socket.send(token);
-
 
             socket.addEventListener('message', (event) => {
                 console.log(event.data, token)

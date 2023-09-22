@@ -1,9 +1,9 @@
 import type {Video} from '@peertube/peertube-types'
 import type {RegisterClientOptions} from '@peertube/peertube-types/client'
 import {videoHasShig, videoHasRemoteShig} from 'shared/lib/video'
-import {logger} from './videowatch/logger'
-import {lobbySVG, askToJoinSVG} from './videowatch/button-svg'
-import {displayButton, displayButtonOptions} from './videowatch/button';
+import {logger} from './logger'
+import {lobbySVG, askToJoinSVG} from './items/svg'
+import {displayButton, displayButtonOptions} from './items/button';
 import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
 
 interface VideoWatchLoadedHookOptions {

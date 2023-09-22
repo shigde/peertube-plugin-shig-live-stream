@@ -1,9 +1,5 @@
-import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
+import {ShowPageOptions} from './show-page-options';
 
-interface ShowPageOptions {
-    rootEl: HTMLElement,
-    peertubeHelpers: RegisterClientHelpers;
-}
 
 async function showLobbyPage({
                                  rootEl,
@@ -36,10 +32,6 @@ async function showLobbyPage({
     };
 
     return Promise.resolve();
-}
-
-export type {
-    ShowPageOptions
 }
 
 export {showLobbyPage};
