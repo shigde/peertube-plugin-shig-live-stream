@@ -50,7 +50,7 @@ export class SQLiteStorageManager {
         })
     }
 
-    async saveInvitation(invitation: InvitationModel) {
+    public async saveInvitation(invitation: InvitationModel) {
         const db = await this.connect()
         db?.run('INSERT INTO invitations(type, isRead, userId, accountId, videoId, videoUrl, videoName, createdAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
             [
@@ -73,7 +73,7 @@ export class SQLiteStorageManager {
         return Promise.resolve()
     }
 
-    async getInvitationsFromUser(userId: number) {
+    public async getInvitationsFromUser(userId: number) {
         const invitations: InvitationModel[] = []
         const db = await this.connect()
         try {
@@ -103,5 +103,25 @@ export class SQLiteStorageManager {
         }
         db?.close()
         return invitations;
+    }
+
+    public async hasUserAnInvitationForVideo(userId: number, videoId: number) {
+        let hasInvitation = false
+        const db = await this.connect()
+
+        try {
+            db?.each('SELECT * FROM invitations WHERE userId = ? AND videoId = ?', [userId, videoId], (err: any, row: any) => {
+                if (err) {
+                    throw err
+                }
+                if (row) {
+                    hasInvitation = true
+                }
+            })
+        } catch (e) {
+            this.logger.error(e)
+        }
+        db?.close()
+        return hasInvitation
     }
 }
