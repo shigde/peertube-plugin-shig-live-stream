@@ -11,7 +11,7 @@ export class VideoHandler {
     ) {
     }
 
-    public async saveShigData(params: any): Promise<void> {
+    public async saveShigData(params: any): Promise<ShigPluginData | void> {
         this.logger.debug('Saving a video, checking for custom fields')
         const body: any = params.body
         const video: Video | undefined = params.video
@@ -38,6 +38,7 @@ export class VideoHandler {
             this.logger.info(`Saving shig-active=true for video ${video.id.toString()}`)
             await this.pluginStorageManager.storeData(`shigActive-${video.id.toString()}`, true)
             await this.fileStorageManager.storePluginData(video, shigPluginData)
+            return shigPluginData
 
         } else if (shigActive === false || shigActive === 'false' || shigActive === 'null') {
             this.logger.info(`Saving shig-active=false for video ${video.id.toString()}`)
