@@ -1,5 +1,7 @@
 import {ShowPageOptions} from './show-page-options';
 import {guestSVG} from '../items/svg';
+import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
+import moment from 'moment';
 
 const invitationSubmenu: { menuObj: any[] } = {
     menuObj: []
@@ -10,15 +12,18 @@ function buildInvitationSubMenu(): string {
     return `<div class="sub-menu sub-menu-fixed">${menu}</div>`
 }
 
+// Main
 async function showInvitationPage({
                                       rootEl,
                                       peertubeHelpers
                                   }: ShowPageOptions) {
     // Redirect to login page if not auth
     if (!peertubeHelpers.isLoggedIn()) return (window.location.href = '/login');
+
     const submenu = buildInvitationSubMenu()
-    const invitations = await buildInvitations()
     const headline = buildHeadline()
+    const invitationsData = await fetchInvitations(peertubeHelpers)
+    const invitations = await buildInvitations(invitationsData)
     rootEl.innerHTML = `${submenu} 
 <div class="margin-content pb-5 offset-content">
     <div class="ng-star-inserted">
@@ -38,8 +43,7 @@ function buildHeadline() {
     return `<h1 ${style}><my-global-icon style="margin-inline-end: 0.625rem; vertical-align: top;">${guestSVG()}</my-global-icon>Invitations</h1>`
 }
 
-
-async function buildInvitations() {
+async function buildInvitations(invites: any[]) {
     const style = 'style= "display: flex; ' +
         '    align-items: center; ' +
         '    font-size: inherit; ' +
@@ -52,32 +56,39 @@ async function buildInvitations() {
         '    color: #333333;' +
         '    min-width: 70px;' +
         '    text-align: end;"'
+
+    let invitationHTML = "";
+        invites.forEach((data) => {
+        invitationHTML = invitationHTML + `
+        <div class="notification ng-star-inserted" ${style}>
+            <my-global-icon iconname="film" aria-hidden="true" class="ng-star-inserted" style="margin-inline-start: 11px; margin-inline-end: 11px">
+            ${guestSVG()}
+            </my-global-icon>
+            <div class="message ng-star-inserted" style="flex-grow: 1;"> You have received a guest streaming invitation for 
+                <a href="${data.videoUrl}">${data.videoName}</a>
+            </div>
+            <div class="from-date" title="${data.createdAt}" ${styleDate}>${moment(data.createdAt).fromNow()}</div>
+        </div>
+        `;
+    })
+
     return `
 
 <my-user-notifications >
     <div class="notifications">
-        <div class="notification ng-star-inserted" ${style}>
-            <my-global-icon iconname="film" aria-hidden="true" class="ng-star-inserted" style="margin-inline-start: 11px; margin-inline-end: 11px">
-            ${guestSVG()}
-            </my-global-icon>
-            <div class="message ng-star-inserted" style="flex-grow: 1;"> You have received a guest streaming invitation for 
-                <a href="/w/dhDhuqxNvziWQGDZTMey6D">What else Shig</a>
-            </div>
-            <div class="from-date" title="2023-09-05T11:41:50.610Z" ${styleDate}>3 days ago</div>
-        </div>
-        
-        <div class="notification ng-star-inserted" ${style}>
-            <my-global-icon iconname="film" aria-hidden="true" class="ng-star-inserted" style="margin-inline-start: 11px; margin-inline-end: 11px">
-            ${guestSVG()}
-            </my-global-icon>
-            <div class="message ng-star-inserted" style="flex-grow: 1;"> You have received a guest streaming invitation for 
-                <a href="/w/dhDhuqxNvziWQGDZTMey6D">LiveShig</a>
-            </div>
-            <div class="from-date" title="2023-09-05T11:41:50.610Z" ${styleDate}>2 weeks ago</div>
-        </div>
+        ${invitationHTML}
     </div>
 </my-user-notifications>
 `
+}
+
+async function fetchInvitations(peertubeHelpers: RegisterClientHelpers, params = null): Promise<any[]> {
+    const baseUrl = peertubeHelpers.getBaseRouterRoute();
+    const response = await fetch(baseUrl + '/invitations?' + (params ? '&' + new URLSearchParams(params).toString() : ''), {
+        method: 'GET',
+        headers: await peertubeHelpers.getAuthHeader(),
+    });
+    return await response.json();
 }
 
 export {
