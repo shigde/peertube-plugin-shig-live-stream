@@ -1,15 +1,29 @@
 import type {RegisterServerOptions, Video} from '@peertube/peertube-types'
 import {VideoHandler} from './handler/video-handler';
+import {InvitationService} from './invitation/invitation-service';
 
 
-async function initCustomFields(options: RegisterServerOptions, videoHandler: VideoHandler): Promise<void> {
+async function initCustomFields(
+    options: RegisterServerOptions,
+    videoHandler: VideoHandler,
+    invitationService: InvitationService
+): Promise<void> {
     const registerHook = options.registerHook
     const logger = options.peertubeHelpers.logger
 
     registerHook({
         target: 'action:api.video.updated',
-        handler: async (parms: any): Promise<void> => {
-            await videoHandler.saveShigData(parms)
+        handler: async (params: any): Promise<void> => {
+            const data = await videoHandler.saveShigData(params)
+
+            const video: Video | undefined = params.video
+            if (!video || !video.id || !video.url) {
+                return
+            }
+
+            if(data) {
+                invitationService.inviteUserAsGuest(data, video)
+            }
         }
     })
 
@@ -25,7 +39,6 @@ async function initCustomFields(options: RegisterServerOptions, videoHandler: Vi
         }
     })
 }
-
 
 // async function fillVideoCustomFields(options: RegisterServerOptions, video: ShigCustomFieldsVideo): Promise<void> {
 //     if (!video) return video

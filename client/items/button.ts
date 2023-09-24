@@ -1,11 +1,11 @@
-import type {SVGButton} from './button-svg'
+import type {SVG} from './svg'
 
 
 interface displayButtonOptionsBase {
     buttonContainer: HTMLElement
     name: string
     label: string
-    icon?: SVGButton
+    icon?: SVG
     additionalClasses?: string[]
 }
 
