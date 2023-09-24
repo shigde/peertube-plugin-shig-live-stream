@@ -3,6 +3,7 @@ import type {RegisterClientFormFieldOptions} from '@peertube/peertube-types'
 import {showLobbyPage} from './pages/lobby';
 import {validateTextField, validateUser} from 'shared/lib/validator';
 import {invitationSubmenu, showInvitationPage} from './pages/invitations';
+
 /*
 NB: if you need some types like `video`, `playlist`, ..., you can import them like that:
 import type { Video } from '@peertube/peertube-types'
@@ -217,8 +218,19 @@ async function register({
             const socket = new WebSocket(url);
             socket.onopen = () => socket.send(token);
 
+            let timer: number;
             socket.addEventListener('message', (event) => {
+                if (event.data === 'connected') {
+                    timer = window.setInterval(() => {
+                        socket.send('heartbeat')
+                    }, 2000);
+                }
                 console.log(event.data, token)
+            })
+            socket.addEventListener('close', (_) => {
+                if (timer) {
+                    clearInterval(timer)
+                }
             })
         },
     });
