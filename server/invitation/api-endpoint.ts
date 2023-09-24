@@ -15,12 +15,12 @@ async function registerAPIEndpoints (options: RegisterServerOptions, storage: SQ
                 return;
             }
 
-            const notifications = await storage.getInvitationsFromUser(user.id)
+            const invitationList = await storage.getInvitationsFromUser(user.id)
 
             res.status(200)
             res.json({
                 status: "Ok",
-                data: notifications
+                data: invitationList
             });
         } catch (e) {
             res.status(500)
