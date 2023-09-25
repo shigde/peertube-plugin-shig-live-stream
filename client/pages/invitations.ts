@@ -2,6 +2,7 @@ import {ShowPageOptions} from './show-page-options';
 import {guestSVG} from '../items/svg';
 import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
 import moment from 'moment';
+import {resetInvitations} from '../invite-marker/invites';
 
 const invitationSubmenu: { menuObj: any[] } = {
     menuObj: []
@@ -20,6 +21,7 @@ async function showInvitationPage({
     // Redirect to login page if not auth
     if (!peertubeHelpers.isLoggedIn()) return (window.location.href = '/login');
 
+    resetInvitations()
     const submenu = buildInvitationSubMenu()
     const headline = buildHeadline()
     const invitationsData = await fetchInvitations(peertubeHelpers)

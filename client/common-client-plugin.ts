@@ -3,6 +3,7 @@ import type {RegisterClientFormFieldOptions} from '@peertube/peertube-types'
 import {showLobbyPage} from './pages/lobby';
 import {validateTextField, validateUser} from 'shared/lib/validator';
 import {invitationSubmenu, showInvitationPage} from './pages/invitations';
+import {addInvitation, buildInvitationNotification} from './invite-marker/invites';
 
 /*
 NB: if you need some types like `video`, `playlist`, ..., you can import them like that:
@@ -43,6 +44,7 @@ async function register({
                     })
                 }
             })
+            setTimeout(() => buildInvitationNotification(), 500);
             return leftMenu
         }
     });
@@ -224,6 +226,8 @@ async function register({
                     timer = window.setInterval(() => {
                         socket.send('heartbeat')
                     }, 2000);
+                } else {
+                    addInvitation()
                 }
                 console.log(event.data, token)
             })

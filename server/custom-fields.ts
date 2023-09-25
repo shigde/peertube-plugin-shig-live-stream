@@ -2,7 +2,6 @@ import type {RegisterServerOptions, Video} from '@peertube/peertube-types'
 import {VideoHandler} from './handler/video-handler';
 import {InvitationService} from './invitation/invitation-service';
 
-
 async function initCustomFields(
     options: RegisterServerOptions,
     videoHandler: VideoHandler,
@@ -22,7 +21,7 @@ async function initCustomFields(
             }
 
             if(data) {
-                invitationService.inviteUserAsGuest(data, video)
+                await invitationService.inviteUserAsGuest(data, video)
             }
         }
     })
