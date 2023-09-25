@@ -17,8 +17,8 @@ export class SQLiteStorageManager {
         const db = await this.connect();
         if (db !== null) {
             db.serialize(() => {
-                db.run('DROP TABLE IF EXISTS invitations');
-                db.run('CREATE TABLE invitations(' +
+                // db.run('DROP TABLE IF EXISTS invitations');
+                db.run('CREATE TABLE IF NOT EXISTS invitations(' +
                     '[id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
                     '[type] INTEGER NOT NULL,' +
                     '[isRead] NUMERIC NOT NULL,' +
@@ -76,52 +76,70 @@ export class SQLiteStorageManager {
     public async getInvitationsFromUser(userId: number) {
         const invitations: InvitationModel[] = []
         const db = await this.connect()
-        try {
-            db?.each('SELECT * FROM invitations WHERE userid = ?', [userId],
-                (err: any, row: any) => {
-                    if (err) {
-                        throw err
+        return new Promise<any[]>((resolve) => {
+            try {
+                db?.all('SELECT * FROM invitations WHERE userId = ?', [userId],
+                    (err: any, rows: any) => {
+                        if (err) {
+                            this.logger.error(err)
+                            throw err
+                        }
+                        if (rows) {
+                            rows.forEach((row: any) => {
+                                invitations.push({
+                                    id: row.id,
+                                    type: row.type,
+                                    isRead: row.isRead,
+                                    userId: row.userId,
+                                    accountId: row.accountId,
+                                    videoId: row.videoId,
+                                    videoUrl: row.videoUrl,
+                                    videoName: row.videoName,
+                                    createdAt: row.createdAt,
+                                    updatedAt: row.updatedAt
+                                } as InvitationModel)
+                            });
+                        }
+                        resolve(invitations)
                     }
-                    if (row) {
-                        invitations.push({
-                            id: row.id,
-                            type: row.type,
-                            isRead: row.isRead,
-                            userId: row.userId,
-                            accountId: row.accountId,
-                            videoId: row.videoId,
-                            videoUrl: row.videoUrl,
-                            videoName: row.videoName,
-                            createdAt: row.createdAt,
-                            updatedAt: row.updatedAt
-                        } as InvitationModel)
-                    }
-                }
-            );
-        } catch (e) {
-            this.logger.error(e)
-        }
-        db?.close()
-        return invitations;
+                );
+            } catch (e) {
+                this.logger.error(e)
+
+                resolve([])
+            }
+        }).then((data) => {
+            db?.close()
+            return data;
+        })
     }
 
     public async hasUserAnInvitationForVideo(userId: number, videoId: number) {
-        let hasInvitation = false
         const db = await this.connect()
+        return new Promise<boolean>((resolve) => {
+            try {
+                db?.all('SELECT * FROM invitations WHERE userId = ? AND videoId = ?', [userId, videoId], (err: any, rows: any[]) => {
+                    if (err) {
+                        throw err
+                    }
+                    this.logger.debug("################### dadat")
+                    this.logger.debug(rows)
+                    if (rows && rows.length > 0) {
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                })
+            } catch (e) {
+                this.logger.error(e)
+                resolve(false)
+            }
+        }).then((data) => {
+            db?.close()
 
-        try {
-            db?.each('SELECT * FROM invitations WHERE userId = ? AND videoId = ?', [userId, videoId], (err: any, row: any) => {
-                if (err) {
-                    throw err
-                }
-                if (row) {
-                    hasInvitation = true
-                }
-            })
-        } catch (e) {
-            this.logger.error(e)
-        }
-        db?.close()
-        return hasInvitation
+            this.logger.debug("################### return")
+            return data;
+        })
+
     }
 }
