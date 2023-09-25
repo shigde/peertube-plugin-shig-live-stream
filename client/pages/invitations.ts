@@ -88,7 +88,8 @@ async function fetchInvitations(peertubeHelpers: RegisterClientHelpers, params =
         method: 'GET',
         headers: await peertubeHelpers.getAuthHeader(),
     });
-    return await response.json();
+    const json = await response.json()
+    return json.data;
 }
 
 export {

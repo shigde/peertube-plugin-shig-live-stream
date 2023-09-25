@@ -214,7 +214,7 @@ async function register({
             const baseScheme = window.location.protocol === 'https:'
                 ? 'wss:'
                 : 'ws:'
-            const url = `${baseScheme}//${window.location.host}/plugins/shig-live-stream/ws/notification`
+            const url = `${baseScheme}//${window.location.host}/plugins/shig-live-stream/ws/invitations`
             const socket = new WebSocket(url);
             socket.onopen = () => socket.send(token);
 

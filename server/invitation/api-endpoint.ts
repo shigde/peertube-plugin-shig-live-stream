@@ -15,7 +15,11 @@ async function registerAPIEndpoints (options: RegisterServerOptions, storage: SQ
                 return;
             }
 
+            options.peertubeHelpers.logger.debug(`Fetch invitations for user: ${user.id}`)
+            options.peertubeHelpers.logger.debug(user.id)
+
             const invitationList = await storage.getInvitationsFromUser(user.id)
+
 
             res.status(200)
             res.json({

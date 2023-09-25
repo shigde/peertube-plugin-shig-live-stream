@@ -1,6 +1,7 @@
 import {WebSocket} from 'ws';
 import {clearInterval} from 'timers';
-import {buildUUID} from '@peertube/peertube-types/shared/extra-utils';
+import {v4 as uuidv4} from 'uuid';
+
 import {InvitationModel} from './invitation-model';
 
 export class InvitationNotifier {
@@ -12,7 +13,6 @@ export class InvitationNotifier {
     constructor() {
         this.timer = this.startInterval()
     }
-
 
     async sendInvitation(userId: number, invitation: InvitationModel) {
         const data = JSON.stringify(invitation)
@@ -49,7 +49,7 @@ export class InvitationNotifier {
 }
 
 class WsClient {
-    public readonly id = buildUUID()
+    public readonly id = uuidv4()
     public isAlive: boolean = true
 
     constructor(public readonly user: number, public readonly ws: WebSocket) {

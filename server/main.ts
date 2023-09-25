@@ -37,7 +37,7 @@ async function register(options: RegisterServerOptions): Promise<void> {
     const postgreManager = new PostgreSqlStorageManager(options.peertubeHelpers)
     const sqliteStorageManager = new SQLiteStorageManager(serverInfosDir, options.peertubeHelpers.logger)
     const invitationNotifier = new InvitationNotifier()
-    const invitationService = new InvitationService(postgreManager, invitationNotifier, sqliteStorageManager)
+    const invitationService = new InvitationService(options.peertubeHelpers, postgreManager, invitationNotifier, sqliteStorageManager)
 
     await sqliteStorageManager.migrate()
     await initInvitation(options, postgreManager, invitationNotifier, sqliteStorageManager)

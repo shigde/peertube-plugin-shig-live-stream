@@ -35,7 +35,7 @@ export class PostgreSqlStorageManager {
         const helper = this.helper
         try {
             const result = await helper.database.query(
-                'SELECT "id" FROM "user" WHERE "username" = $name', {
+                'SELECT * FROM "user" WHERE "username" = $name', {
                     type: 'SELECT',
                     bind: {name: name}
                 }
@@ -48,6 +48,26 @@ export class PostgreSqlStorageManager {
         } catch (e) {
             helper.logger.error(e)
             return -1
+        }
+    }
+
+    public async getAccountByUserId(userId: number): Promise<any> {
+        const helper = this.helper
+        try {
+            const result = await helper.database.query(
+                'SELECT * FROM "account" WHERE "userId" = $userId', {
+                    type: 'SELECT',
+                    bind: {userId: userId}
+                }
+            );
+
+            if (result && result.length != 1) {
+                return null
+            }
+            return result[0]
+        } catch (e) {
+            helper.logger.error(e)
+            return null
         }
     }
 }
