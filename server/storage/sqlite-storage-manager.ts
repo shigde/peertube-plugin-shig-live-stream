@@ -17,7 +17,7 @@ export class SQLiteStorageManager {
         const db = await this.connect();
         if (db !== null) {
             db.serialize(() => {
-                // db.run('DROP TABLE IF EXISTS invitations');
+                db.run('DROP TABLE IF EXISTS invitations');
                 db.run('CREATE TABLE IF NOT EXISTS invitations(' +
                     '[id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,' +
                     '[type] INTEGER NOT NULL,' +
@@ -50,27 +50,29 @@ export class SQLiteStorageManager {
         })
     }
 
-    public async saveInvitation(invitation: InvitationModel) {
+    public async saveInvitation(invitation: InvitationModel): Promise<void> {
         const db = await this.connect()
-        db?.run('INSERT INTO invitations(type, isRead, userId, accountId, videoId, videoUrl, videoName, createdAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
-            [
-                invitation.type,
-                invitation.isRead,
-                invitation.userId,
-                invitation.accountId,
-                invitation.videoId,
-                invitation.videoUrl,
-                invitation.videoName,
-                invitation.createdAt
-            ], (err: any) => {
-                if (err) {
-                    this.logger.error(err.message);
-                }
-                this.logger.debug('Row was added to the table: ${this.lastID}');
-            })
-
-        db?.close()
-        return Promise.resolve()
+        return new Promise((resolve) => {
+            db?.run('INSERT INTO invitations(type, isRead, userId, accountId, videoId, videoUrl, videoName, createdAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)',
+                [
+                    invitation.type,
+                    invitation.isRead,
+                    invitation.userId,
+                    invitation.accountId,
+                    invitation.videoId,
+                    invitation.videoUrl,
+                    invitation.videoName,
+                    invitation.createdAt
+                ], (err: any, row: any) =>  {
+                    if (err) {
+                        this.logger.error(err.message);
+                    }
+                    this.logger.debug('Row was added to the table: ${this.lastID}');
+                    resolve(null);
+                })
+        }).then(() => {
+            db?.close()
+        })
     }
 
     public async getInvitationsFromUser(userId: number) {
@@ -122,7 +124,6 @@ export class SQLiteStorageManager {
                     if (err) {
                         throw err
                     }
-                    this.logger.debug("################### dadat")
                     this.logger.debug(rows)
                     if (rows && rows.length > 0) {
                         resolve(true)
@@ -136,8 +137,6 @@ export class SQLiteStorageManager {
             }
         }).then((data) => {
             db?.close()
-
-            this.logger.debug("################### return")
             return data;
         })
 
