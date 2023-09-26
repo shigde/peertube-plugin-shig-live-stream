@@ -34,6 +34,7 @@ export class SQLiteStorageManager {
                 );
             });
         }
+        db?.close();
     }
 
     private connect(): Promise<Database | null> {
