@@ -88,7 +88,8 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 const modalConfirm = labels[4]
                 const modalCancel = labels[5]
 
-                console.log('video', video)
+                console.log('video ------------------######', video)
+
 
                 let buttonOptions: displayButtonOptions;
                 if (showOpenLobbyButton) {
@@ -97,7 +98,7 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                         name: 'open',
                         label: labelOpenShigLobby,
                         //callback: () => openLobby(video),
-                        href: '/p/lobby?stream=' + video.shortUUID,
+                        href: `/p/lobby?stream=${video.uuid}&channel=${video.channel.name}@${video.channel.host}`,
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
@@ -138,8 +139,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
         }
 
         let container = placeholder;
-
-        console.log('video', video)
 
         peertubeHelpers.getSettings().then((s: any) => {
             settings = s
