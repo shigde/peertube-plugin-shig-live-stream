@@ -33,14 +33,42 @@ function guessIsMine(registerOptions: RegisterClientOptions, video: Video): bool
         if (!username) {
             return false
         }
-        if (username !== video.account?.name) {
+
+        if (username !== video.account?.name && !isGuest(video.pluginData, username)) {
             return false
         }
+
         return true
     } catch (err) {
         logger.error(err as string)
         return false
     }
+}
+
+function isGuest(data: any, username: string): boolean {
+    if (!data) {
+        return false
+    }
+    if (!!data?.firstGuest && isUsername(data.firstGuest, username)) {
+        return true
+    }
+
+    if (!!data?.secondGuest && isUsername(data.secondGuest, username)) {
+        return true
+    }
+
+    if (!!data?.thirdGuest && isUsername(data.thirdGuest, username)) {
+        return true
+    }
+    return false
+}
+
+function isUsername(guest: string, username: string): boolean {
+    const splitted = guest.split('@', 1);
+    if (splitted.length > 0 && splitted[0] === username) {
+        return true
+    }
+    return false
 }
 
 function guessIamIModerator(_registerOptions: RegisterClientOptions): boolean {
@@ -65,7 +93,10 @@ function guessIamIModerator(_registerOptions: RegisterClientOptions): boolean {
 }
 
 async function register(registerOptions: RegisterClientOptions): Promise<void> {
-    const {registerHook, peertubeHelpers} = registerOptions
+    const {
+        registerHook,
+        peertubeHelpers
+    } = registerOptions
 
     let settings: any = {}
 
@@ -89,7 +120,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 const modalCancel = labels[5]
 
                 console.log('video ------------------######', video)
-
 
                 let buttonOptions: displayButtonOptions;
                 if (showOpenLobbyButton) {
@@ -170,7 +200,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 return
             }
 
-
             let showOpenLobbyButton: boolean = false
             if (guessIsMine(registerOptions, video) || guessIamIModerator(registerOptions)) {
                 showOpenLobbyButton = true
@@ -214,12 +243,14 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
             close: true,
             // show cancel button and call action() after hiding modal
             cancel: {
-                value: modalCancel, action: () => {
+                value: modalCancel,
+                action: () => {
                 }
             },
             // show confirm button and call action() after hiding modal
             confirm: {
-                value: modalConfirm, action: () => {
+                value: modalConfirm,
+                action: () => {
 
                 }
             },
