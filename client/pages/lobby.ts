@@ -18,8 +18,8 @@ async function showLobbyPage({
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const stream = urlParams.get('stream')
-    const channel = urlParams.get('channel')
+    const stream = urlParams.get('s')
+    const channel = urlParams.get('c')
 
     shigLobby.onload = () => {
         const lobby = document.createElement('shig-lobby');
@@ -27,12 +27,20 @@ async function showLobbyPage({
             console.log('Component loaded successfully!', event);
         });
 
+        let domain = '';
+        const username = window.localStorage.getItem('username')
+        const split = channel?.split('@', 2)
+        if (split !== undefined && split.length >= 2) {
+            domain = split[1]
+        }
+
         peertubeHelpers.getServerConfig()
         const auth = peertubeHelpers.getAuthHeader();
         lobby.setAttribute('token', auth !== undefined ? auth.Authorization : 'unauthorized');
         lobby.setAttribute('api-prefix', '/plugins/shig-live-stream/router');
         lobby.setAttribute('space', `${channel}`);
         lobby.setAttribute('stream', `${stream}`);
+        lobby.setAttribute('user', `${username}@${domain}`);
 
         const wrapper = document.getElementById('wrapper');
         wrapper?.appendChild(lobby);

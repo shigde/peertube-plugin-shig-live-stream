@@ -99,7 +99,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
     } = registerOptions
 
     let settings: any = {}
-
     async function insertShigDom(container: HTMLElement, video: Video, showOpenLobbyButton: boolean): Promise<void> {
         logger.log('Adding Shig in the DOM...')
         const p = new Promise<void>((resolve, reject) => {
@@ -119,16 +118,14 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 const modalConfirm = labels[4]
                 const modalCancel = labels[5]
 
-                console.log('video ------------------######', video)
-
                 let buttonOptions: displayButtonOptions;
                 if (showOpenLobbyButton) {
                     buttonOptions = {
                         buttonContainer: container,
                         name: 'open',
                         label: labelOpenShigLobby,
-                        //callback: () => openLobby(video),
-                        href: `/p/lobby?stream=${video.uuid}&channel=${video.channel.name}@${video.channel.host}`,
+                        // callback: () => openLobby(video),
+                        href: `/p/lobby?s=${video.uuid}&c=${video.channel.name}@${video.channel.host}`,
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
