@@ -49,7 +49,7 @@ async function initSettings(options: RegisterServerOptions,): Promise<void> {
         descriptionHTML: 'Insert a service access token.',
         type: 'input',
         default: '',
-        private: false,
+        private: true,
         error: validateToken
     })
 

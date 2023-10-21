@@ -182,11 +182,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 return
             }
 
-            if (!settings['shig-access-token']) {
-                logger.log('No Shig Access Token')
-                return
-            }
-
             if (isAnonymousUser(registerOptions)) {
                 logger.log('No Shig for anonymous users')
                 return
