@@ -165,6 +165,8 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
             return
         }
 
+        console.log('#############- ', video)
+
         let container = placeholder;
 
         peertubeHelpers.getSettings().then((s: any) => {

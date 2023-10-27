@@ -21,7 +21,8 @@ async function showLobbyPage({
     const stream = urlParams.get('s')
     const channel = urlParams.get('c')
 
-    shigLobby.onload = () => {
+
+    shigLobby.onload = async () => {
         const lobby = document.createElement('shig-lobby');
         lobby.addEventListener('loadComp', (event) => {
             console.log('Component loaded successfully!', event);
