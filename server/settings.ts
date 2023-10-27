@@ -1,7 +1,8 @@
 import type {PeerTubeHelpers, RegisterServerOptions} from '@peertube/peertube-types'
 import {validateServerUrl, validateToken} from '../shared/lib/validator';
+import {registerShigInstance} from './http/client';
 
-async function initSettings(options: RegisterServerOptions): Promise<void> {
+async function initSettings(options: RegisterServerOptions,): Promise<void> {
     const {
         registerSetting,
         settingsManager,
@@ -48,7 +49,7 @@ async function initSettings(options: RegisterServerOptions): Promise<void> {
         descriptionHTML: 'Insert a service access token.',
         type: 'input',
         default: '',
-        private: false,
+        private: true,
         error: validateToken
     })
 
@@ -68,6 +69,10 @@ async function initSettings(options: RegisterServerOptions): Promise<void> {
 }
 
 async function updateSettings(peertubeHelpers: PeerTubeHelpers, settings: any) {
+    if (settings['shig-plugin-active']) {
+        let actor = await peertubeHelpers.server.getServerActor()
+        await registerShigInstance(settings['shig-server-url'], actor.url, settings['shig-access-token'])
+    }
     peertubeHelpers.logger.info('settings changed')
 }
 

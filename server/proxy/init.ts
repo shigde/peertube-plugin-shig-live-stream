@@ -1,9 +1,13 @@
 import {MUserDefault, RegisterServerOptions} from '@peertube/peertube-types';
-import proxy from 'express-http-proxy';
+import {createProxyMiddleware} from 'http-proxy-middleware';
 import {NextFunction, Response} from 'express';
 import {getShigSettings} from '../../shared/lib/video';
-// @TODO fix this with real authorisation
-const bearer = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWF0IjoxNTE2MjM5MDIyLCJ1dWlkIjoiOWJlZGMwZDktZWM2MS00ZmY0LWI4MWEtOGZkZGU0NWY3MzI3In0.831begOFS84xV-7BpXYlVgg3A2hMf4xbPWoXRs4m0qg'
+import {getToken} from '../http/client';
+import http from 'http';
+import * as httpProxy from 'http-proxy';
+import * as querystring from 'querystring';
+
+export type BodyParserLikeRequest = http.IncomingMessage & { body: any };
 
 async function initProxy(options: RegisterServerOptions): Promise<void> {
     const router = options.getRouter()
@@ -14,43 +18,75 @@ async function initProxy(options: RegisterServerOptions): Promise<void> {
     }
 
     const shigUrl = settings['shig-server-url']
-
-    router.all('/space*', proxy(shigUrl, {
-        filter: (req, res) => {
-            return new Promise((resolve, reject) => {
-                options.peertubeHelpers.user.getAuthUser(res).then((user: MUserDefault) => {
-                    if (!user) {
-                        reject({code: 'UNAUTHORISED'})
-                    } else {
-                        resolve(true)
-                    }
-                })
-            });
-        },
-        proxyErrorHandler: (
-            err: any,
-            res: Response,
-            next: NextFunction
-        ): any | undefined => {
-            switch (err && err.code) {
-                case 'UNAUTHORISED': {
-                    return res.status(401).send('Unauthorised');
+    const shigToken = settings['shig-access-token']
+    let serverDomain = options.peertubeHelpers.config.getWebserverUrl();
+    const HTTP = 'http://';
+    if (serverDomain.startsWith(HTTP)) {
+        // PREFIX is exactly at the beginning
+        serverDomain = serverDomain.slice(HTTP.length);
+    } else {
+        serverDomain = serverDomain.slice(HTTP.length + 1);
+    }
+    const entryMiddleware = (req: any, res: Response, next: NextFunction) => {
+        options.peertubeHelpers.user.getAuthUser(res)
+            .then((user: MUserDefault) => {
+                if (!user) {
+                    const err = new Error('not authorized') as any;
+                    err.status = 401;
+                    throw err
                 }
-                default: {
-                    next(err);
+                return user.username
+            })
+            .then((userName) => getToken(shigUrl, `${userName}@${serverDomain}`, shigToken))
+            .then((token) => {
+                if (!token) {
+                    const err = new Error('not authorized') as any;
+                    err.status = 401;
+                    throw err
+                } else {
+                    req.locals = {contextToken: token};
+                    res.locals.contextToken = token
+                    next()
+                }
+            })
+            .catch((err) => {
+                next(err)
+            })
+    };
+
+    router.all('/space*', entryMiddleware, createProxyMiddleware({
+        target: shigUrl,
+        changeOrigin: true,
+        pathRewrite: {
+            '^/plugins/shig-live-stream/router/': '/', // remove base path
+        },
+        onProxyReq: (proxyReq: http.ClientRequest, req: any, res: Response, options: httpProxy.ServerOptions) => {
+            proxyReq.setHeader('authorization', req.locals.contextToken)
+            const contentType = proxyReq.getHeader('Content-Type') as string;
+
+            if (req.method == 'POST' && contentType && contentType.includes('application/json')) {
+                const requestBody = (req as unknown as BodyParserLikeRequest).body;
+
+                if (!requestBody) {
+                    return;
+                }
+
+                const writeBody = (bodyData: string) => {
+                    // deepcode ignore ContentLengthInCode: bodyParser fix
+                    proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                    proxyReq.write(bodyData);
+                };
+
+                if (contentType && contentType.includes('application/json')) {
+                    writeBody(JSON.stringify(requestBody));
+                }
+
+                if (contentType && contentType.includes('application/x-www-form-urlencoded')) {
+                    writeBody(querystring.stringify(requestBody));
                 }
             }
-        },
-        proxyReqOptDecorator: (proxyReqOpts, srcReq) => {
-            proxyReqOpts.headers = {
-                ...proxyReqOpts.headers,
-                'authorization': bearer
-            };
-            return proxyReqOpts;
-        },
-        parseReqBody: false,
+        }
     }));
-
 }
 
 export {

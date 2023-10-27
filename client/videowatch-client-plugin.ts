@@ -33,14 +33,42 @@ function guessIsMine(registerOptions: RegisterClientOptions, video: Video): bool
         if (!username) {
             return false
         }
-        if (username !== video.account?.name) {
+
+        if (username !== video.account?.name && !isGuest(video.pluginData, username)) {
             return false
         }
+
         return true
     } catch (err) {
         logger.error(err as string)
         return false
     }
+}
+
+function isGuest(data: any, username: string): boolean {
+    if (!data) {
+        return false
+    }
+    if (!!data?.firstGuest && isUsername(data.firstGuest, username)) {
+        return true
+    }
+
+    if (!!data?.secondGuest && isUsername(data.secondGuest, username)) {
+        return true
+    }
+
+    if (!!data?.thirdGuest && isUsername(data.thirdGuest, username)) {
+        return true
+    }
+    return false
+}
+
+function isUsername(guest: string, username: string): boolean {
+    const splitted = guest.split('@', 1);
+    if (splitted.length > 0 && splitted[0] === username) {
+        return true
+    }
+    return false
 }
 
 function guessIamIModerator(_registerOptions: RegisterClientOptions): boolean {
@@ -65,10 +93,12 @@ function guessIamIModerator(_registerOptions: RegisterClientOptions): boolean {
 }
 
 async function register(registerOptions: RegisterClientOptions): Promise<void> {
-    const {registerHook, peertubeHelpers} = registerOptions
+    const {
+        registerHook,
+        peertubeHelpers
+    } = registerOptions
 
     let settings: any = {}
-
     async function insertShigDom(container: HTMLElement, video: Video, showOpenLobbyButton: boolean): Promise<void> {
         logger.log('Adding Shig in the DOM...')
         const p = new Promise<void>((resolve, reject) => {
@@ -88,16 +118,14 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 const modalConfirm = labels[4]
                 const modalCancel = labels[5]
 
-                console.log('video', video)
-
                 let buttonOptions: displayButtonOptions;
                 if (showOpenLobbyButton) {
                     buttonOptions = {
                         buttonContainer: container,
                         name: 'open',
                         label: labelOpenShigLobby,
-                        //callback: () => openLobby(video),
-                        href: '/p/lobby?stream=' + video.shortUUID,
+                        // callback: () => openLobby(video),
+                        href: `/p/lobby?s=${video.uuid}&c=${video.channel.name}@${video.channel.host}`,
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
@@ -137,9 +165,9 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
             return
         }
 
-        let container = placeholder;
+        console.log('#############- ', video)
 
-        console.log('video', video)
+        let container = placeholder;
 
         peertubeHelpers.getSettings().then((s: any) => {
             settings = s
@@ -156,11 +184,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 return
             }
 
-            if (!settings['shig-access-token']) {
-                logger.log('No Shig Access Token')
-                return
-            }
-
             if (isAnonymousUser(registerOptions)) {
                 logger.log('No Shig for anonymous users')
                 return
@@ -170,7 +193,6 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 logger.log('This video has no Shig activated')
                 return
             }
-
 
             let showOpenLobbyButton: boolean = false
             if (guessIsMine(registerOptions, video) || guessIamIModerator(registerOptions)) {
@@ -215,12 +237,14 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
             close: true,
             // show cancel button and call action() after hiding modal
             cancel: {
-                value: modalCancel, action: () => {
+                value: modalCancel,
+                action: () => {
                 }
             },
             // show confirm button and call action() after hiding modal
             confirm: {
-                value: modalConfirm, action: () => {
+                value: modalConfirm,
+                action: () => {
 
                 }
             },
