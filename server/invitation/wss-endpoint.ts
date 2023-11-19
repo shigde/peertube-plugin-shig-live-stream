@@ -14,7 +14,7 @@ async function registerWssEndpoints(
             const userId = await postgre.getUserIdByOAuthToken(`${token}`)
             logger.debug(`user - connected: ${userId}`)
             if (userId == -1) {
-                ws.close(401, 'authentication failed"')
+                ws.close(3000, 'authentication failed"')
                 return
             }
             ws.send('connected')
