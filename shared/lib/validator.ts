@@ -14,7 +14,7 @@ function isUser(val: string): boolean {
     if (typeof val !== 'string') {
         return false
     }
-    const userRegexp = new RegExp('^[0-9a-zA-Z\\.\\=\\_\\-\\:]{1,}\\@[a-zA-Z0-9.:]{1,61}$')
+    const userRegexp = new RegExp('^[0-9a-zA-Z\\.\\=\\_\\-\\:]{1,}\\@[a-zA-Z0-9.:-_]{1,61}$')
     return userRegexp.test(val)
 }
 
