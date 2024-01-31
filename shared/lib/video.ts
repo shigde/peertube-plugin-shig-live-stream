@@ -74,6 +74,8 @@ interface VideoHasRemoteShigSettings {
  * Indicates if the video has a remote chat.
  */
 function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedVideo): boolean {
+    console.log("XXaa", settings)
+    console.log("XXaa", video)
     if (settings['shig-federation-no-remote']) {
         return false
     }
