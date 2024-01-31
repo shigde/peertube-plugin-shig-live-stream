@@ -74,23 +74,21 @@ interface VideoHasRemoteShigSettings {
  * Indicates if the video has a remote chat.
  */
 function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedVideo): boolean {
-    console.log("XXaa", settings)
-    console.log("XXaa", video)
     if (settings['shig-federation-no-remote']) {
         return false
     }
-    if ('isLocal' in video) {
-        if (video.isLocal) return false
-    } else {
-        if (!video.remote) return false
-    }
-    if (!video.pluginData) {
-        return false
-    }
-    if (!video.pluginData['shigRemote']) {
-        return false
-    }
     return true
+    // if ('isLocal' in video) {
+    //     if (video.isLocal) return false
+    // } else {
+    //     if (!video.remote) return false
+    // }
+    // if (!video.pluginData) {
+    //     return false
+    // }
+    // if (!video.pluginData['shigRemote']) {
+    //     return false
+    // }
 }
 
 async function getShigSettings(settingsManager: PluginSettingsManager): Promise<VideoHasShigSettings> {
