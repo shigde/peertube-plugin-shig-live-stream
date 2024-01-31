@@ -9,7 +9,7 @@ async function showLobbyPage({
     // const loading = await peertubeHelpers.translate("Loading");
     // rootEl.innerHTML = loading + "...";
     rootEl.classList.add('root')
-    rootEl.innerHTML = `<div id="wrapper" class="margin-content pb-1 offset-content"></div>`
+    rootEl.innerHTML = `<div id="wrapper" class="margin-content pb-1"></div>`
 
     const shigLobby = document.createElement('script');
     shigLobby.type = 'text/javascript';
