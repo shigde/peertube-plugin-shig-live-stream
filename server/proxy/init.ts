@@ -18,7 +18,7 @@ async function initProxy(options: RegisterServerOptions): Promise<void> {
     }
 
     const shigUrl = settings['shig-server-url']
-    const shigToken = settings['shig-access-token']
+    const shigToken = "e8401093-1d3e-4310-a656-7a30239529c3"
     let serverDomain = options.peertubeHelpers.config.getWebserverUrl();
     const HTTP = 'http://';
     if (serverDomain.startsWith(HTTP)) {
