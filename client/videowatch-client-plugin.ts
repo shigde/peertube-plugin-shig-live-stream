@@ -111,16 +111,14 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                 peertubeHelpers.translate('Confirm'),
                 peertubeHelpers.translate('Cancel'),
             ]).then(labels => {
-                const labelAskToJoin = labels[0]
+                // const labelAskToJoin = labels[0]
                 const labelOpenShigLobby = labels[1]
-                const modalTitle = labels[2]
-                const modalContent = labels[3]
-                const modalConfirm = labels[4]
-                const modalCancel = labels[5]
+                // const modalTitle = labels[2]
+                // const modalContent = labels[3]
+                // const modalConfirm = labels[4]
+                // const modalCancel = labels[5]
 
-                let buttonOptions: displayButtonOptions;
-                if (showOpenLobbyButton) {
-                    buttonOptions = {
+                let buttonOptions: displayButtonOptions = {
                         buttonContainer: container,
                         name: 'open',
                         label: labelOpenShigLobby,
@@ -129,23 +127,24 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
                         icon: lobbySVG,
                         additionalClasses: ['orange-button']
                     }
-                } else {
-                    buttonOptions = {
-                        buttonContainer: container,
-                        name: 'join',
-                        label: labelAskToJoin,
-                        callback: () => openLobbyRequest(
-                            video,
-                            peertubeHelpers,
-                            modalTitle,
-                            modalContent,
-                            modalConfirm,
-                            modalCancel
-                        ),
-                        icon: askToJoinSVG,
-                        additionalClasses: ['action-button']
-                    }
-                }
+
+                // else {
+                //     buttonOptions = {
+                //         buttonContainer: container,
+                //         name: 'join',
+                //         label: labelAskToJoin,
+                //         callback: () => openLobbyRequest(
+                //             video,
+                //             peertubeHelpers,
+                //             modalTitle,
+                //             modalContent,
+                //             modalConfirm,
+                //             modalCancel
+                //         ),
+                //         icon: askToJoinSVG,
+                //         additionalClasses: ['action-button']
+                //     }
+                // }
                 displayButton(buttonOptions)
                 resolve()
             })
