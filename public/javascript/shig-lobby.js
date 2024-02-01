@@ -7852,7 +7852,7 @@ class PeerTubeService {
     this.messageService = messageService;
   }
   fetchStreamLiveData(token, stream) {
-    return this.http.get(`api/v1/videos/live/${stream}`, {
+    return this.http.get(`/api/v1/videos/live/${stream}`, {
       headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_7__.HttpHeaders({
         'Authorization': token,
         'Content-Type': 'application/json'
@@ -8905,6 +8905,8 @@ class LobbyComponent {
     }
   }
   start() {
+    console.log("Hey ####################");
+    console.log("Hey ####################", this.streamLiveData, this.streamId, this.spaceId);
     if (this.streamLiveData != undefined && this.streamId != undefined && this.spaceId != undefined) {
       this.lobbyService.startLiveStream(this.streamLiveData, this.spaceId, this.streamId).subscribe(() => {
         this.state = 'online';
