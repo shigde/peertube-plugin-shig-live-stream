@@ -7897,7 +7897,7 @@ class PeerTubeService {
 const WIDTH = 1920;
 const HEIGHT = 1080;
 let img = new Image();
-img.src = './assets/icons/face.svg';
+img.src = '/assets/icons/face.svg';
 img.onload = function () {
   console.log('Image loaded');
 };
