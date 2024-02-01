@@ -2,9 +2,9 @@ import type {Video} from '@peertube/peertube-types'
 import type {RegisterClientOptions} from '@peertube/peertube-types/client'
 import {videoHasShig, videoHasRemoteShig} from 'shared/lib/video'
 import {logger} from './logger'
-import {lobbySVG, askToJoinSVG} from './items/svg'
+import {lobbySVG} from './items/svg'
 import {displayButton, displayButtonOptions} from './items/button';
-import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
+// import {RegisterClientHelpers} from '@peertube/peertube-types/client/types/register-client-option.model';
 
 interface VideoWatchLoadedHookOptions {
     videojs: any
@@ -215,40 +215,40 @@ async function register(registerOptions: RegisterClientOptions): Promise<void> {
     //     }
     // }
 
-    function openLobbyRequest(
-        video: Video,
-        peertubeHelpers: RegisterClientHelpers,
-        modalTitle: string,
-        modalContent: string,
-        modalConfirm: string,
-        modalCancel: string,
-    ): void | boolean {
-        if (!video) {
-            logger.log('No video.')
-            return false
-        }
-
-        peertubeHelpers.showModal({
-            title: modalTitle,
-            content: '<p>' + modalContent + '</p>',
-            // Optionals parameters :
-            // show close icon
-            close: true,
-            // show cancel button and call action() after hiding modal
-            cancel: {
-                value: modalCancel,
-                action: () => {
-                }
-            },
-            // show confirm button and call action() after hiding modal
-            confirm: {
-                value: modalConfirm,
-                action: () => {
-
-                }
-            },
-        })
-    }
+    // function openLobbyRequest(
+    //     video: Video,
+    //     peertubeHelpers: RegisterClientHelpers,
+    //     modalTitle: string,
+    //     modalContent: string,
+    //     modalConfirm: string,
+    //     modalCancel: string,
+    // ): void | boolean {
+    //     if (!video) {
+    //         logger.log('No video.')
+    //         return false
+    //     }
+    //
+    //     peertubeHelpers.showModal({
+    //         title: modalTitle,
+    //         content: '<p>' + modalContent + '</p>',
+    //         // Optionals parameters :
+    //         // show close icon
+    //         close: true,
+    //         // show cancel button and call action() after hiding modal
+    //         cancel: {
+    //             value: modalCancel,
+    //             action: () => {
+    //             }
+    //         },
+    //         // show confirm button and call action() after hiding modal
+    //         confirm: {
+    //             value: modalConfirm,
+    //             action: () => {
+    //
+    //             }
+    //         },
+    //     })
+    // }
 
     registerHook({
         target: 'action:video-watch.video.loaded',
