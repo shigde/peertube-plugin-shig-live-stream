@@ -1,6 +1,6 @@
 {
   "name": "peertube-plugin-shig-live-stream",
-  "version": "0.0.501",
+  "version": "0.0.529",
   "description": "Multi guest video live streaming for PeerTube",
   "license": "MIT",
   "author": {
@@ -47,7 +47,7 @@
     "build:server": "npx tsc --build server/tsconfig.json",
     "build:client": "node ./scripts/build.js",
     "build:styles": "npx sass --no-source-map assets:dist/assets",
-    "build": "npm-run-all -s clean check:client:tsc -p build:server build:client build:styles",
+    "build": "npm run clean && npm run check:client:tsc -p && npm run build:server && npm run build:client && npm run build:styles",
     "lint:script": "npx eslint --ext .ts --ext .js .",
     "lint:styles": "stylelint 'assets/**/*.scss'",
     "test": "npm-run-all -p lint:script lint:styles"

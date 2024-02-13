@@ -27,8 +27,3 @@ pass: test123
 ```
 ./plugin-install.sh
 ```
-
-Maybe you need to install `peertube-cli` before
-```
-npm install -g @peertube/peertube-cli
-```
