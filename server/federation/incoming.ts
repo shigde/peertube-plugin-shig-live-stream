@@ -12,9 +12,11 @@ async function readIncomingAPVideo(videoHandler: VideoHandler, {
     let peertubeShig = ('peertubeShig' in videoAPObject) ? videoAPObject.peertubeShig : false
 
     // We must sanitize peertubeShig, as it comes for the outer world.
+    videoHandler.logger.debug("#####-## incomming", video, videoAPObject)
+
     if (peertubeShig !== false) {
         peertubeShig = sanitizePeertubeShigPluginData(peertubeShig, video.url)
-        await videoHandler.getFileSoraage().storePluginData(video, peertubeShig)
+        await videoHandler.getFileStorage().storePluginData(video, peertubeShig)
         if (video.remote) {
             // @TODO save remote shig server data currently we do not have
         }

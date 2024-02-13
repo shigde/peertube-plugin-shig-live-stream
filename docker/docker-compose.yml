@@ -1,0 +1,72 @@
+version: "3.3"
+
+networks:
+  peertube-docker:
+
+services:
+  peertube:
+    # If you don't want to use the official image and build one from sources:
+    # build:
+    #    context: .
+    #    dockerfile: ./peertube/Dockerfile
+    image: chocobozzz/peertube:production-bookworm
+    # Use a static IP for this container because nginx does not handle proxy host change without reload
+    # This container could be restarted on crash or until the postgresql database is ready for connection
+    networks:
+      - peertube-docker
+    container_name: peertube
+    env_file:
+      - .env
+    extra_hosts:
+      - "shigde.docker.local:host-gateway"
+    ports:
+      - "1936:1935" # Comment if you don't want to use the live feature
+      - "9001:9000" # Uncomment if you use another webserver/proxy or test PeerTube in local, otherwise not suitable for production
+    volumes:
+      - ./docker-volume/data:/data
+      - ./docker-volume/config:/config
+      # - ./docker-volume/peertube-plugin-shig-live-stream:/usr/local/peertube-plugin-shig-live-stream
+    depends_on:
+      - postgres
+      - redis
+      - postfix
+    restart: "always"
+
+  postgres:
+    image: postgres:13-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./docker-volume/db:/var/lib/postgresql/data
+    restart: "always"
+    networks:
+      - peertube-docker
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - ./docker-volume/redis:/data
+    restart: "always"
+    networks:
+      - peertube-docker
+
+  postfix:
+    image: mwader/postfix-relay
+    env_file:
+      - .env
+    volumes:
+      - ./docker-volume/opendkim/keys:/etc/opendkim/keys
+    restart: "always"
+    networks:
+      - peertube-docker
+
+  shigde:
+    image: shigde/instance
+    platform: linux/amd64
+    ports:
+      - "8090:8090"
+    env_file:
+      - .env
+    restart: "always"
+    networks:
+      - peertube-docker
