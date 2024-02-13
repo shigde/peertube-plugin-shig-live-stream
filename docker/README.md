@@ -2,7 +2,7 @@
 
 ## Before run first time
 
-Please add in in your `/etc/hosts`
+Please add in your `/etc/hosts`
 
 ```
 127.0.0.1 peertube.localhost

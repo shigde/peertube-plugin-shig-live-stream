@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-#cd ../ && BASEDIR=${PWD} && npm version --no-git-tag-version patch && npm run build
-#peertube-cli plugins install --path ${BASEDIR} -u 'http://localhost:9000/' -U 'root' --password 'test'
-
 
 cd ../ \
   && npm version --no-git-tag-version patch \
@@ -17,7 +14,6 @@ cd ../ \
   && cp package-lock.json docker/docker-volume/peertube-plugin-shig-live-stream/  \
   && cp docker/peertube/build.sh docker/docker-volume/peertube-plugin-shig-live-stream/
 
-#docker exec -it peertube peertube-cli auth add -u 'http://localhost:9000/' -U 'root' --password 'test123'
 docker exec -it peertube /usr/local/peertube-plugin-shig-live-stream/build.sh
 docker exec -it peertube peertube-cli plugins install --url 'http://peertube.localhost:9001'  --username 'root' --password 'test123' --path /usr/local/peertube-plugin-shig-live-stream
 
