@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
     extra_hosts:
-      - "shigde.docker.local:host-gateway"
+      - "shigde.localhost:host-gateway"
       - "peertube.localhost:host-gateway"
     ports:
       - "1936:1935" # Comment if you don't want to use the live feature
@@ -66,6 +66,9 @@ services:
     platform: linux/amd64
     ports:
       - "8090:8090"
+    extra_hosts:
+      - "shigde.localhost:host-gateway"
+      - "peertube.localhost:host-gateway"
     env_file:
       - .env
     restart: "always"
