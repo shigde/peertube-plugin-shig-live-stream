@@ -134,5 +134,6 @@ dist
 .idea
 notes.md
 example.mp4
-deploy.sh
-
+local-plugin-install.sh
+docker/docker-volume
+home

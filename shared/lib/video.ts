@@ -17,6 +17,8 @@ interface VideoHasShigSettings {
 interface ShigPluginData {
     url: string
 
+    shigInstanceUrl?: string
+
     shigActive?: boolean
     shigRemote?: boolean
 
@@ -46,19 +48,12 @@ interface SharedVideoBackend extends ShigVideo {
 type SharedVideo = SharedVideoBackend | SharedVideoFrontend
 
 /**
- * Indicate if the video has a local chat.
+ * Indicate if the video has shig plugin active.
  * @param settings plugin settings
  * @param video the video
- * @returns true if the video has a local chat
+ * @returns true if the video has shig plugin active
  */
 function videoHasShig(settings: VideoHasShigSettings, video: SharedVideo): boolean {
-    // Never use webchat on remote videos.
-    if ('isLocal' in video) {
-        if (!video.isLocal) return false
-    } else {
-        if (video.remote) return false
-    }
-
     if (settings['shig-plugin-active'] && video.isLive && video.pluginData && video.pluginData['shigActive']) {
         return true
     }
@@ -71,7 +66,7 @@ interface VideoHasRemoteShigSettings {
 }
 
 /**
- * Indicates if the video has a remote chat.
+ * Indicates if the video has a remote .
  */
 function videoHasRemoteShig(settings: VideoHasRemoteShigSettings, video: SharedVideo): boolean {
     if (settings['shig-federation-no-remote']) {

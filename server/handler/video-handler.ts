@@ -7,7 +7,7 @@ export class VideoHandler {
     constructor(
         private pluginStorageManager: PluginStorageManager,
         private fileStorageManager: FileStorageManager,
-        private logger: Logger
+        public logger: Logger
     ) {
     }
 
@@ -71,7 +71,7 @@ export class VideoHandler {
         }
     }
 
-    public getFileSoraage(): FileStorageManager {
+    public getFileStorage(): FileStorageManager {
         return this.fileStorageManager
     }
 }

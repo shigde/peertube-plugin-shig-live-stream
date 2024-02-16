@@ -1,0 +1,122 @@
+version: "3.3"
+
+networks:
+  peertube_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
+          gateway: "172.16.238.1"
+
+services:
+  # You can comment this webserver section if you want to use https in local.
+  # You have to set in the .env the webserver settings
+  # PEERTUBE_WEBSERVER_PORT=443
+  # PEERTUBE_WEBSERVER_HTTPS=true
+  webserver:
+    image: chocobozzz/peertube-webserver:latest
+    # If you don't want to use the official image and build one from sources:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.nginx
+    env_file:
+      - .env
+    ports:
+      - "9004:80"
+ #     - "9001:443" # Uncomment if you use webserver with https
+    volumes:
+      - type: bind
+        # Switch sources if you downloaded the whole repository
+        source: ./nginx/peertube
+        target: /etc/nginx/conf.d/peertube.template
+      - ./nginx/crypt/localhost.crt:/etc/nginx/ssl/localhost.crt
+      - ./nginx/crypt/localhost.key:/etc/nginx/ssl/localhost.key
+      - assets:/var/www/peertube/peertube-latest/client/dist:ro
+      - ./docker-volume/data:/var/www/peertube/storage
+      - certbot-www:/var/www/certbot
+      - ./docker-volume/certbot/conf:/etc/letsencrypt
+    networks:
+      - peertube_net
+    depends_on:
+      - peertube
+    restart: "always"
+
+  peertube:
+    # If you don't want to use the official image and build one from sources:
+    build:
+       context: .
+       dockerfile: ./peertube/Dockerfile
+    # image: chocobozzz/peertube:production-bookworm
+    # Use a static IP for this container because nginx does not handle proxy host change without reload
+    # This container could be restarted on crash or until the postgresql database is ready for connection
+    networks:
+      peertube_net:
+        ipv4_address: 172.16.238.42
+    container_name: peertube
+    env_file:
+      - .env
+    extra_hosts:
+      - "shigde.localhost:host-gateway"
+      - "remote-peertube.localhost:host-gateway"
+      - "remote-shigde.localhost:host-gateway"
+    ports:
+      - "1936:1935" # Comment if you don't want to use the live feature
+      - "9001:9000" # Uncomment if you use the webserver
+    volumes:
+      - assets:/app/client/dist
+      - ./docker-volume/data:/data
+      - ./docker-volume/config:/config
+      - ./docker-volume/peertube-plugin-shig-live-stream:/usr/local/peertube-plugin-shig-live-stream
+    depends_on:
+      - postgres
+      - redis
+      - postfix
+    restart: "always"
+
+  postgres:
+    image: postgres:13-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./docker-volume/db:/var/lib/postgresql/data
+    restart: "always"
+    networks:
+      - peertube_net
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - ./docker-volume/redis:/data
+    restart: "always"
+    networks:
+      - peertube_net
+
+  postfix:
+    image: mwader/postfix-relay
+    env_file:
+      - .env
+    volumes:
+      - ./docker-volume/opendkim/keys:/etc/opendkim/keys
+    restart: "always"
+    networks:
+      - peertube_net
+
+  shigde:
+    image: shigde/instance
+    platform: linux/amd64
+    ports:
+      - "8090:8090"
+    extra_hosts:
+      - "peertube.localhost:host-gateway"
+      - "shigde.localhost:host-gateway"
+      - "remote-peertube.localhost:host-gateway"
+      - "remote-shigde.localhost:host-gateway"
+    env_file:
+      - .env
+    restart: "always"
+    networks:
+      - peertube_net
+
+volumes:
+  assets:
+  certbot-www:
