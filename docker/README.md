@@ -1,14 +1,5 @@
 # Docker dev environment
 
-## Before run first time
-
-Please add in your `/etc/hosts`
-
-```
-127.0.0.1 peertube.localhost
-127.0.0.1 shigde.localhost
-```
-
 ## Run
 
 ```
@@ -21,11 +12,11 @@ You can open in a webbrowser:
 
 **Shig**: http://shigde.localhost:8090/federation/accounts/shig
 
-### Peertube Root login
+### PeerTube Root login
 
 ```
 user: root
-pass: test123
+pass: test
 ```
 
 ## Install Plugin
@@ -48,3 +39,8 @@ Afterward, you can input the URL `http://shigde.localhost:8090` and secret key `
 Shig will automatically follow this PeerTube instance.
 
 !["follow"](./docs/shig-follow.jpg)
+
+
+# PeerTube Remote Instance
+Sometimes you need a second instance, for example when working on ActivityPub remote videos. 
+That's why I placed a second Docker configuration in the `remote` folder.
