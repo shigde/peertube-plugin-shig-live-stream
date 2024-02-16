@@ -1,5 +1,6 @@
 # Docker dev environment
 
+This is a description of a development environment where you can develop and test the plugin.
 
 #### Note: shig docker image
 !! Please note that there is currently no image available for the Shig instance on Docker Hub. 
@@ -10,6 +11,8 @@ After this follow the instructions here to build an `shigde/instance` image: htt
 I will soon provide a functioning image on Docker Hub. Thank you!
 
 ## Run
+
+Run the commands in this directory.
 
 ```
 docker-compose up -d
