@@ -1,5 +1,14 @@
 # Docker dev environment
 
+
+#### Note: shig docker image
+!! Please note that there is currently no image available for the Shig instance on Docker Hub. 
+Therefore, you will need to build the image yourself. 
+Please checkout the shig instance: `fodem-changes` branche https://github.com/shigde/sfu/tree/fodem-changes 
+
+After this follow the instructions here to build an `shigde/instance` image: https://github.com/shigde/sfu/blob/fodem-changes/README.md#build-docker-container-for-shig-instance-1
+I will soon provide a functioning image on Docker Hub. Thank you!
+
 ## Run
 
 ```
