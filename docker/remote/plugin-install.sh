@@ -15,5 +15,5 @@ cd ../../ \
   && cp docker/peertube/build.sh docker/remote/docker-volume/peertube-plugin-shig-live-stream/
 
 docker exec -it peertube-remote /usr/local/peertube-plugin-shig-live-stream/build.sh
-docker exec -it peertube-remoet peertube-cli plugins install --url 'ttp://localhost:9000'  --username 'root' --password 'test' --path /usr/local/peertube-plugin-shig-live-stream
+docker exec -it peertube-remote peertube-cli plugins install --url 'http://localhost:9000'  --username 'root' --password 'test' --path /usr/local/peertube-plugin-shig-live-stream
 

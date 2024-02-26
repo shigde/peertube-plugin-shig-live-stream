@@ -12,6 +12,7 @@ import {initInvitation} from './invitation/init';
 import {InvitationService} from './invitation/invitation-service';
 import {PostgreSqlStorageManager} from './storage/postgresql-storage-manager';
 import {InvitationNotifier} from './invitation/invitation-notifier';
+import {ActivityPubHandler} from './handler/activitypub-handler';
 
 // FIXME: Peertube unregister don't have any parameter.
 // Using this global variable to fix this, so we can use helpers to unregister.
@@ -31,6 +32,7 @@ async function register(options: RegisterServerOptions): Promise<void> {
 
     const serverInfosDir = path.resolve(options.peertubeHelpers.plugin.getDataDirectoryPath(), 'serverInfos')
     const fileHandler = new FileStorageManager(serverInfosDir, options.peertubeHelpers.logger);
+    const apHandler = new ActivityPubHandler(options.peertubeHelpers, options.settingsManager, options.peertubeHelpers.logger)
     const videoHandler = new VideoHandler(options.storageManager, fileHandler, options.peertubeHelpers.logger)
 
     // init invitation objects
@@ -43,7 +45,7 @@ async function register(options: RegisterServerOptions): Promise<void> {
     await initInvitation(options, postgreManager, invitationNotifier, sqliteStorageManager)
     await initCustomFields(options, videoHandler, invitationService)
     await initSettings(options)
-    await initFederation(options, videoHandler)
+    await initFederation(options, videoHandler, apHandler)
     await initProxy(options)
 
     OPTIONS.notifier = invitationNotifier
