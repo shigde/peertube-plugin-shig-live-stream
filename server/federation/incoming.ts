@@ -1,7 +1,7 @@
 import {VideoHandler} from '../handler/video-handler';
 import {sanitizePeertubeShigPluginData} from './sanitize';
 import {RemoteVideoHandlerParams} from './types';
-import {ActivityPubHandler} from '../handler/activitypub-handler';
+import {ActivityPubHandler, ActivityType} from '../handler/activitypub-handler';
 import {Logger} from 'winston';
 
 /**
@@ -10,7 +10,7 @@ import {Logger} from 'winston';
 async function readIncomingAPVideo(videoHandler: VideoHandler, apHandler: ActivityPubHandler, logger: Logger, {
     video,
     videoAPObject
-}: RemoteVideoHandlerParams): Promise<void> {
+}: RemoteVideoHandlerParams, activityType: ActivityType): Promise<void> {
     let peertubeShig = ('peertubeShig' in videoAPObject) ? videoAPObject.peertubeShig : false
     if (peertubeShig !== false) {
         // We must sanitize peertubeShig, as it comes for the outer world.
@@ -19,7 +19,7 @@ async function readIncomingAPVideo(videoHandler: VideoHandler, apHandler: Activi
         await videoHandler.getFileStorage().storePluginData(video, peertubeShig)
         if (video.remote) {
             logger.debug('send announcement to shig instance')
-            await apHandler.sendRemoteAnnounceToShig(videoAPObject)
+            await apHandler.sendRemoteActivityToShig(videoAPObject, activityType)
         }
     }
 }
