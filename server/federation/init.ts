@@ -34,7 +34,15 @@ export async function initFederation(options: RegisterServerOptions, videoHandle
     registerHook({
         target: 'action:activity-pub.remote-video.updated',
         handler: async (params: RemoteVideoHandlerParams) => {
+            logger.info('######## ... update -- ##')
             return readIncomingAPVideo(videoHandler, apHandler, logger, params, 'update')
+        }
+    })
+
+    registerHook({
+        target: 'action:api.video.deleted',
+        handler:  (aa : any) => {
+            logger.info('######## ... delete -- ##', aa)
         }
     })
 }
