@@ -45,7 +45,7 @@ async function register(options: RegisterServerOptions): Promise<void> {
     await initInvitation(options, postgreManager, invitationNotifier, sqliteStorageManager)
     await initCustomFields(options, videoHandler, invitationService)
     await initSettings(options)
-    await initFederation(options, videoHandler, apHandler)
+    await initFederation(options, videoHandler, apHandler, invitationService)
     await initProxy(options)
 
     OPTIONS.notifier = invitationNotifier

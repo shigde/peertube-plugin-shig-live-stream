@@ -4,8 +4,9 @@ import {videoBuildJSONLD} from './outgoing'
 import {readIncomingAPVideo} from './incoming'
 import {VideoHandler} from '../handler/video-handler';
 import {ActivityPubHandler} from '../handler/activitypub-handler';
+import {InvitationService} from '../invitation/invitation-service';
 
-export async function initFederation(options: RegisterServerOptions, videoHandler: VideoHandler, apHandler: ActivityPubHandler): Promise<void> {
+export async function initFederation(options: RegisterServerOptions, videoHandler: VideoHandler, apHandler: ActivityPubHandler, invitationService: InvitationService): Promise<void> {
     const logger = options.peertubeHelpers.logger
     const registerHook = options.registerHook
     logger.info('Registring federation hooks...')
@@ -28,14 +29,14 @@ export async function initFederation(options: RegisterServerOptions, videoHandle
     registerHook({
         target: 'action:activity-pub.remote-video.created',
         handler: async (params: RemoteVideoHandlerParams) => {
-            return readIncomingAPVideo(videoHandler, apHandler, logger, params, 'announce')
+            return readIncomingAPVideo(videoHandler, apHandler, invitationService, logger, params, 'announce')
         }
     })
     registerHook({
         target: 'action:activity-pub.remote-video.updated',
         handler: async (params: RemoteVideoHandlerParams) => {
             logger.info('######## ... update -- ##')
-            return readIncomingAPVideo(videoHandler, apHandler, logger, params, 'update')
+            return readIncomingAPVideo(videoHandler, apHandler, invitationService, logger, params, 'update')
         }
     })
 

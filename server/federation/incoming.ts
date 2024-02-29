@@ -3,11 +3,16 @@ import {sanitizePeertubeShigPluginData} from './sanitize';
 import {RemoteVideoHandlerParams} from './types';
 import {ActivityPubHandler, ActivityType} from '../handler/activitypub-handler';
 import {Logger} from 'winston';
+import {InvitationService} from '../invitation/invitation-service';
 
 /**
  * This function reads incoming ActivityPub data, to detect Shig informations.
  */
-async function readIncomingAPVideo(videoHandler: VideoHandler, apHandler: ActivityPubHandler, logger: Logger, {
+async function readIncomingAPVideo(
+    videoHandler: VideoHandler,
+    apHandler: ActivityPubHandler,
+    invitationService: InvitationService,
+    logger: Logger, {
     video,
     videoAPObject
 }: RemoteVideoHandlerParams, activityType: ActivityType): Promise<void> {
@@ -20,6 +25,7 @@ async function readIncomingAPVideo(videoHandler: VideoHandler, apHandler: Activi
         if (video.remote) {
             logger.debug('send announcement to shig instance')
             await apHandler.sendRemoteActivityToShig(videoAPObject, activityType)
+            await invitationService.inviteUserAsGuest(peertubeShig, video)
         }
     }
 }
