@@ -58,6 +58,7 @@ services:
     extra_hosts:
       - "shigde.localhost:host-gateway"
       - "remote-peertube.localhost:host-gateway"
+      - "stream.localhost:host-gateway" # for your local shig instance
       - "remote-shigde.localhost:host-gateway"
     ports:
       - "1936:1935" # Comment if you don't want to use the live feature
@@ -106,9 +107,11 @@ services:
     platform: linux/amd64
     ports:
       - "8090:8090"
+      - "50000-50200:50000-50200"
     extra_hosts:
       - "peertube.localhost:host-gateway"
       - "shigde.localhost:host-gateway"
+      - "stream.localhost:host-gateway" # for your local shig instance
       - "remote-peertube.localhost:host-gateway"
       - "remote-shigde.localhost:host-gateway"
     env_file:

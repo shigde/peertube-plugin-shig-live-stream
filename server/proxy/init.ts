@@ -50,6 +50,7 @@ async function initProxy(options: RegisterServerOptions): Promise<void> {
                 }
             })
             .catch((err) => {
+                console.log("#######################", err)
                 next(err)
             })
     };

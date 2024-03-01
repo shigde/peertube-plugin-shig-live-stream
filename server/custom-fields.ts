@@ -1,6 +1,7 @@
 import type {RegisterServerOptions, Video} from '@peertube/peertube-types'
 import {VideoHandler} from './handler/video-handler';
 import {InvitationService} from './invitation/invitation-service';
+import {getShigSettings} from '../shared/lib/video';
 
 async function initCustomFields(
     options: RegisterServerOptions,
@@ -13,7 +14,8 @@ async function initCustomFields(
     registerHook({
         target: 'action:api.video.updated',
         handler: async (params: any): Promise<void> => {
-            const data = await videoHandler.saveShigData(params)
+            const settings = await getShigSettings(options.settingsManager)
+            const data = await videoHandler.saveShigData(params, settings)
 
             const video: Video | undefined = params.video
             if (!video || !video.id || !video.url) {

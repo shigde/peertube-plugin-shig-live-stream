@@ -7,6 +7,9 @@ networks:
       config:
         - subnet: "172.16.118.0/24"
           gateway: "172.16.118.1"
+  host_net:
+    ipam:
+      driver: host
 
 services:
 
@@ -56,12 +59,14 @@ services:
     extra_hosts:
       - "peertube.localhost:host-gateway"
       - "shigde.localhost:host-gateway"
-      - "remote-shigde.localhost:host-gateway"
+      #- "remote-peertube.localhost:host-gateway"
+      - "remote-stream.localhost:host-gateway" # for your local shig instance
+      #- "remote-shigde.localhost:host-gateway"
     container_name: peertube-remote
     env_file:
       - .env
     ports:
-      - "1937:1935" # Comment if you don't want to use the live feature
+      - "1935:1935" # Comment if you don't want to use the live feature
       - "9002:9000" # Comment if you use webserver with https
     volumes:
       - assets:/app/client/dist
@@ -110,6 +115,7 @@ services:
     extra_hosts:
       - "peertube.localhost:host-gateway"
       - "shigde.localhost:host-gateway"
+      - "stream.localhost:host-gateway" # for your local shig instance
       - "remote-peertube.localhost:host-gateway"
     env_file:
       - .env

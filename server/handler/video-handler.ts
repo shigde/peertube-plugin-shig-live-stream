@@ -7,11 +7,11 @@ export class VideoHandler {
     constructor(
         private pluginStorageManager: PluginStorageManager,
         private fileStorageManager: FileStorageManager,
-        public logger: Logger
+        private logger: Logger
     ) {
     }
 
-    public async saveShigData(params: any): Promise<ShigPluginData | void> {
+    public async saveShigData(params: any, settings: any): Promise<ShigPluginData | void> {
         this.logger.debug('Saving a video, checking for custom fields')
         const body: any = params.body
         const video: Video | undefined = params.video
@@ -19,9 +19,11 @@ export class VideoHandler {
             return
         }
 
-        if (!body.pluginData) return
+        if (!body.pluginData || !settings) return
 
         const shigActive = body.pluginData['shigActive']
+
+        const shigUrl= settings['shig-server-url']
         // NB: on Peertube 3.2.1, value is "true", "false", or "null", as strings.
 
         if (shigActive === true || shigActive === 'true') {
@@ -29,6 +31,7 @@ export class VideoHandler {
             const shigPluginData = {
                 url: video.url,
                 shigActive: shigActive,
+                shigInstanceUrl: shigUrl,
                 firstGuest: body.pluginData['firstGuest'],
                 secondGuest: body.pluginData['secondGuest'],
                 thirdGuest: body.pluginData['thirdGuest'],

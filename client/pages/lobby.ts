@@ -42,6 +42,7 @@ async function showLobbyPage({
         lobby.setAttribute('space', `${channel}`);
         lobby.setAttribute('stream', `${stream}`);
         lobby.setAttribute('user', `${username}@${domain}`);
+        lobby.setAttribute('base-path', `${peertubeHelpers.getBaseStaticRoute()}`);
 
         const wrapper = document.getElementById('wrapper');
         wrapper?.appendChild(lobby);

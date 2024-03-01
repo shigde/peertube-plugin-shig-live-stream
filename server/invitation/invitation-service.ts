@@ -17,7 +17,7 @@ export class InvitationService {
         this.domain = this.getDomain()
     }
 
-    public async inviteUserAsGuest(data: ShigPluginData, video: Video) {
+    public async inviteUserAsGuest(data: ShigPluginData, video: Video | any) {
         if (data.firstGuest) {
             await this.handleGuestInvitation(data.firstGuest, video)
         }
@@ -44,21 +44,21 @@ export class InvitationService {
         }
         // find user in db
         const userId = await this.postgre.getUserIdByUserName(splitted[0])
-        if(userId == -1 ) {
+        if (userId == -1) {
             looger.debug('Can not invite as Guest because not valid user id')
             return;
         }
 
         // find account for user. The account is needed to fetch the actor
         const account = await this.postgre.getAccountByUserId(userId)
-        if(account === null ) {
+        if (account === null) {
             looger.debug('Can not invite as Guest because has no account')
             return;
         }
 
         // check user already has an invitation
         const haInvitation = await this.storage.hasUserAnInvitationForVideo(userId, video.id)
-        if(haInvitation) {
+        if (haInvitation) {
             looger.debug('Can not invite as Guest because is already invited')
             return;
         }
@@ -74,16 +74,26 @@ export class InvitationService {
         return (domainEnd === -1) ? domainUrl : domainUrl.substring(0, domainEnd)
     }
 
-    private buildInvitation(userId: number, accountId: number,video: Video): InvitationModel {
+    private buildInvitation(userId: number, accountId: number, video: Video): InvitationModel {
         return {
             type: 1,
             isRead: false,
             userId: userId,
             accountId: accountId,
             videoId: video.id,
-            videoUrl: video.url,
+            videoUrl: this.replaceVideoUrlWithWebserverUrl(video.url),
             videoName: video.name,
             createdAt: new Date(),
         } as InvitationModel
+    }
+
+    private replaceVideoUrlWithWebserverUrl(videoUrl: string): string {
+        let serverVideoUrl = this.helper.config.getWebserverUrl()
+        const words = videoUrl.split('/');
+
+        for (let i = 3; i < words.length; i++) {
+            serverVideoUrl += '/' + words[i];
+        }
+        return serverVideoUrl
     }
 }
