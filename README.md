@@ -2,7 +2,7 @@
 
 This [PeerTube](https://joinpeertube.org/) plugin is meant to provide interactive streams for PeerTube.
 
-!["Shig Lobbyy"](./docs/shig-lobby.jpg)
+!["Shig Lobbyy"](./docs/shig-lobby.jpeg)
 
 It consists of a Shig lobby that can connect to a Shig instance (https://github.com/shigde/sfu) , which in turn can
 distribute livestreams within the Fediverse.
